@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calorie Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 99, 71, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #1f1f1f;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 99, 71, 0.03);
+            box-sizing: border-box;
+            border: 1px solid #333333;
+            position: relative;
+            z-index: 2;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-direction: column;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+        }
+        h1 {
+            color: #ff7f50;
+            text-align: center;
+            margin: 0;
+            font-size: 42px;
+            text-shadow: 0 0 10px rgba(255, 127, 80, 0.3);
+            font-weight: 900;
+            letter-spacing: 3px;
+            animation: fireGlow 2s ease-in-out infinite alternate;
+        }
+        .fire-subtitle {
+            color: #ff9966;
+            font-size: 18px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255, 153, 102, 0.3);
+            margin-top: -10px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes fireGlow {
+            from {
+                text-shadow: 0 0 10px rgba(255, 127, 80, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 127, 80, 0.4), 0 0 25px rgba(255, 127, 80, 0.2);
+            }
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+        h2, h3 {
+            color: #ff6b35;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            align-items: start;
+        }
+        .left-panel {
+            position: sticky;
+            top: 20px;
+        }
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .input-section {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2a2a;
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ff8c42;
+            font-size: 14px;
+        }
+        input[type="number"], input[type="date"], input[type="text"], select {
+            padding: 8px;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+        input[type="number"]:focus, input[type="date"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #ff4500;
+            box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+        }
+        button {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        button:hover {
+            background-color: #ff7f50;
+            box-shadow: 0 0 8px rgba(255, 127, 80, 0.4), 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 0 5px rgba(255, 127, 80, 0.3);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            background-color: #0a0a0a;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        th, td {
+            border: 1px solid #2a2a2a;
+            padding: 10px;
+            text-align: left;
+            color: #ffffff;
+        }
+        th {
+            background-color: #1a0000;
+            color: #ff8c42;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #0f0f0f;
+        }
+        tr:nth-child(odd) {
+            background-color: #0a0a0a;
+        }
+        tr:hover {
+            background-color: #1a1a1a;
+        }
+        tr.dragging {
+            opacity: 0.5;
+        }
+        tr.drag-over {
+            border-top: 3px solid #ff4500;
+        }
+        .editable {
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        .editable:hover {
+            background-color: rgba(255, 127, 80, 0.1);
+        }
+        .editable.editing {
+            background-color: #2a2a2a;
+            border: 1px solid #ff7f50;
+        }
+        .drag-handle {
+            cursor: move;
+            color: #888888;
+            padding: 0 8px;
+            font-size: 18px;
+        }
+        .drag-handle:hover {
+            color: #ff9966;
+        }
+        .summary {
+            background-color: #1a0000;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2a2a;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+        }
+        .summary-label {
+            color: #999999;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .delete-btn {
+            background-color: #d9534f;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .delete-btn:hover {
+            background-color: #e74c3c;
+        }
+        .export-btn {
+            background-color: #5cb85c;
+        }
+        .export-btn:hover {
+            background-color: #6ec06e;
+        }
+        .calc-btn-main {
+            background-color: #9b6bae;
+        }
+        .calc-btn-main:hover {
+            background-color: #a77bb8;
+        }
+        
+        /* Calculator Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 15% auto;
+            padding: 15px;
+            border: 1px solid #ff4500;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 300px;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+        }
+        .close {
+            color: #ff4500;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #ff6b35;
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+        }
+        .calculator {
+            background-color: #0a0a0a;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .calculator h3 {
+            margin-top: 5px;
+        }
+        .calc-display {
+            background-color: #000000;
+            padding: 10px;
+            border: 2px solid #3a3a3a;
+            border-radius: 4px;
+            font-size: 18px;
+            text-align: right;
+            margin-bottom: 10px;
+            min-height: 25px;
+            color: #ff8c42;
+        }
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .calc-btn {
+            padding: 15px;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calc-btn:hover {
+            background-color: #3a3a3a;
+            transform: scale(1.05);
+        }
+        .calc-btn.number {
+            background-color: #1a1a1a;
+        }
+        .calc-btn.number:hover {
+            background-color: #2a2a2a;
+        }
+        .calc-btn.operator {
+            background-color: #8b4513;
+        }
+        .calc-btn.operator:hover {
+            background-color: #a0522d;
+        }
+        .calc-btn.equals {
+            background-color: #2d5016;
+            grid-column: span 2;
+        }
+        .calc-btn.equals:hover {
+            background-color: #3a6b1d;
+        }
+        .calc-btn.clear {
+            background-color: #8b0000;
+        }
+        .calc-btn.clear:hover {
+            background-color: #b30000;
+        }
+        
+        /* Edit input styling */
+        .edit-input {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            border: 1px solid #ff7f50;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .left-panel {
+                position: static;
+            }
+            .summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <img src="https://i.imgur.com/Rw5LT0B.png" alt="APPO Logo" class="logo">
+            <h1>APPOBEAST CALORIE TRACKER</h1>
+            <div class="fire-subtitle">FUEL THE FIRE WITHIN</div>
+        </div>
+        
+        <div class="main-layout">
+            <div class="left-panel">
+                <div class="input-section">
+                    <h2>🔥 BEAST MODE ENTRY 🔥</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" value="">
+                        </div>
+                        <div class="input-group">
+                            <label for="mealType">Meal Type</label>
+                            <select id="mealType">
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Morning Snack">Morning Snack</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Afternoon Snack">Afternoon Snack</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Evening Snack">Evening Snack</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="meal">Food Item</label>
+                            <input type="text" id="meal" placeholder="e.g., Oatmeal with berries">
+                        </div>
+                        <div class="input-group">
+                            <label for="calories">Total Calories</label>
+                            <input type="number" id="calories" placeholder="0" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="proteins">Proteins (g)</label>
+                            <input type="number" id="proteins" placeholder="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="fats">Fats (g)</label>
+                            <input type="number" id="fats" placeholder="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="carbs">Carbs (g)</label>
+                            <input type="number" id="carbs" placeholder="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="fiber">Fiber (g)</label>
+                            <input type="number" id="fiber" placeholder="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="weight">Current Weight (kg)</label>
+                            <input type="number" id="weight" placeholder="0" step="0.1">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="addEntry()">Add Entry</button>
+                        <button onclick="clearForm()">Clear Form</button>
+                        <button class="calc-btn-main" onclick="openCalculator()">Calculator</button>
+                    </div>
+                </div>
+
+                <div class="summary">
+                    <h3>💀 TODAY'S APOCALYPSE STATS 💀</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalCalories">0</div>
+                            <div class="summary-label">Total Calories</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalProteins">0g</div>
+                            <div class="summary-label">Proteins</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalFats">0g</div>
+                            <div class="summary-label">Fats</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalCarbs">0g</div>
+                            <div class="summary-label">Carbs</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalFiber">0g</div>
+                            <div class="summary-label">Fiber</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="latestWeight">-</div>
+                            <div class="summary-label">Latest Weight</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h2>⚔️ TRACKING BATTLEFIELD ⚔️</h2>
+                <div class="button-group">
+                    <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+                    <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleFileImport(event)">
+                    <button onclick="document.getElementById('csvFileInput').click()">Import CSV</button>
+                    <button onclick="clearAllData()">Clear All Data</button>
+                </div>
+                <div class="table-container">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>☰</th>
+                                <th>Date</th>
+                                <th>Meal Type</th>
+                                <th>Food Item</th>
+                                <th>Cal</th>
+                                <th>Pro (g)</th>
+                                <th>Fat (g)</th>
+                                <th>Carb (g)</th>
+                                <th>Fib (g)</th>
+                                <th>Wt (kg)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Modal -->
+    <div id="calcModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCalculator()">&times;</span>
+            <div class="calculator">
+                <h3>Calculator</h3>
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
+                    <button class="calc-btn clear" onclick="clearCalc()">C</button>
+                    <button class="calc-btn" onclick="appendToCalc('/')">/</button>
+                    <button class="calc-btn" onclick="appendToCalc('*')">×</button>
+                    <button class="calc-btn" onclick="deleteLastCalc()">←</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
+                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
+                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
+                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('1')">1</button>
+                    <button class="calc-btn number" onclick="appendToCalc('2')">2</button>
+                    <button class="calc-btn number" onclick="appendToCalc('3')">3</button>
+                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('0')">0</button>
+                    <button class="calc-btn" onclick="appendToCalc('(')">(</button>
+                    <button class="calc-btn" onclick="appendToCalc(')')">)</button>
+                    <button class="calc-btn equals" onclick="calculateResult()">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data array
+        let calorieData = [];
+        
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        function addEntry() {
+            const date = document.getElementById('date').value;
+            const mealType = document.getElementById('mealType').value;
+            const meal = document.getElementById('meal').value;
+            const calories = parseFloat(document.getElementById('calories').value) || 0;
+            const proteins = parseFloat(document.getElementById('proteins').value) || 0;
+            const fats = parseFloat(document.getElementById('fats').value) || 0;
+            const carbs = parseFloat(document.getElementById('carbs').value) || 0;
+            const fiber = parseFloat(document.getElementById('fiber').value) || 0;
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            
+            if (!date || !meal) {
+                alert('Please enter at least a date and food item description');
+                return;
+            }
+            
+            const entry = {
+                id: Date.now(),
+                date,
+                mealType,
+                meal,
+                calories,
+                proteins,
+                fats,
+                carbs,
+                fiber,
+                weight
+            };
+            
+            calorieData.push(entry);
+            clearForm();
+            updateDisplay();
+            saveData();
+        }
+        
+        function clearForm() {
+            document.getElementById('meal').value = '';
+            document.getElementById('calories').value = '';
+            document.getElementById('proteins').value = '';
+            document.getElementById('fats').value = '';
+            document.getElementById('carbs').value = '';
+            document.getElementById('fiber').value = '';
+            document.getElementById('weight').value = '';
+        }
+        
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                calorieData = calorieData.filter(entry => entry.id !== id);
+                updateDisplay();
+                saveData();
+            }
+        }
+        
+        function updateDisplay() {
+            updateTable();
+            updateSummary();
+        }
+        
+        function updateTable() {
+            const tbody = document.getElementById('dataBody');
+            tbody.innerHTML = '';
+            
+            // Sort by date (newest first) and then by ID to maintain order
+            const sortedData = [...calorieData].sort((a, b) => {
+                const dateCompare = new Date(b.date) - new Date(a.date);
+                if (dateCompare === 0) {
+                    return a.order - b.order || a.id - b.id;
+                }
+                return dateCompare;
+            });
+            
+            sortedData.forEach((entry, index) => {
+                const row = tbody.insertRow();
+                row.draggable = true;
+                row.dataset.id = entry.id;
+                row.dataset.date = entry.date;
+                
+                row.innerHTML = `
+                    <td class="drag-handle">☰</td>
+                    <td>${formatDate(entry.date)}</td>
+                    <td class="editable" data-field="mealType" data-id="${entry.id}">${entry.mealType || 'Not specified'}</td>
+                    <td class="editable" data-field="meal" data-id="${entry.id}">${entry.meal}</td>
+                    <td class="editable" data-field="calories" data-id="${entry.id}">${entry.calories}</td>
+                    <td class="editable" data-field="proteins" data-id="${entry.id}">${entry.proteins.toFixed(1)}</td>
+                    <td class="editable" data-field="fats" data-id="${entry.id}">${entry.fats.toFixed(1)}</td>
+                    <td class="editable" data-field="carbs" data-id="${entry.id}">${entry.carbs.toFixed(1)}</td>
+                    <td class="editable" data-field="fiber" data-id="${entry.id}">${entry.fiber.toFixed(1)}</td>
+                    <td class="editable" data-field="weight" data-id="${entry.id}">${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button></td>
+                `;
+                
+                // Add drag event listeners
+                row.addEventListener('dragstart', handleDragStart);
+                row.addEventListener('dragover', handleDragOver);
+                row.addEventListener('drop', handleDrop);
+                row.addEventListener('dragend', handleDragEnd);
+                row.addEventListener('dragleave', handleDragLeave);
+            });
+            
+            // Add click event listeners for editing
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('click', handleEdit);
+            });
+        }
+        
+        function handleEdit(e) {
+            const cell = e.target;
+            if (cell.classList.contains('editing')) return;
+            
+            const originalValue = cell.textContent;
+            const field = cell.dataset.field;
+            const id = parseInt(cell.dataset.id);
+            
+            let inputType = 'text';
+            if (['calories', 'proteins', 'fats', 'carbs', 'fiber', 'weight'].includes(field)) {
+                inputType = 'number';
+            }
+            
+            let inputHTML = '';
+            if (field === 'mealType') {
+                inputHTML = `
+                    <select class="edit-input" style="width: 100%; padding: 4px;">
+                        <option value="Breakfast" ${originalValue === 'Breakfast' ? 'selected' : ''}>Breakfast</option>
+                        <option value="Morning Snack" ${originalValue === 'Morning Snack' ? 'selected' : ''}>Morning Snack</option>
+                        <option value="Lunch" ${originalValue === 'Lunch' ? 'selected' : ''}>Lunch</option>
+                        <option value="Afternoon Snack" ${originalValue === 'Afternoon Snack' ? 'selected' : ''}>Afternoon Snack</option>
+                        <option value="Dinner" ${originalValue === 'Dinner' ? 'selected' : ''}>Dinner</option>
+                        <option value="Evening Snack" ${originalValue === 'Evening Snack' ? 'selected' : ''}>Evening Snack</option>
+                    </select>
+                `;
+            } else {
+                inputHTML = `<input type="${inputType}" class="edit-input" value="${originalValue === '-' ? '' : originalValue}" style="width: 100%; padding: 4px;" ${inputType === 'number' ? 'step="0.1"' : ''}>`;
+            }
+            
+            cell.classList.add('editing');
+            cell.innerHTML = inputHTML;
+            const input = cell.querySelector('.edit-input');
+            input.focus();
+            
+            if (inputType === 'text') {
+                input.select();
+            }
+            
+            const saveEdit = () => {
+                let newValue = input.value;
+                
+                if (inputType === 'number') {
+                    newValue = parseFloat(newValue) || 0;
+                }
+                
+                // Update the data
+                const entry = calorieData.find(e => e.id === id);
+                if (entry) {
+                    entry[field] = newValue;
+                    updateDisplay();
+                    saveData();
+                }
+            };
+            
+            input.addEventListener('blur', saveEdit);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    input.blur();
+                }
+            });
+        }
+        
+        let draggedElement = null;
+        
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(e.currentTarget.parentElement, e.clientY);
+            const dragging = document.querySelector('.dragging');
+            
+            if (afterElement == null) {
+                e.currentTarget.parentElement.appendChild(dragging);
+            } else {
+                e.currentTarget.parentElement.insertBefore(dragging, afterElement);
+            }
+            
+            // Add visual feedback
+            e.currentTarget.classList.add('drag-over');
+        }
+        
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            if (draggedElement) {
+                const draggedId = parseInt(draggedElement.dataset.id);
+                const draggedDate = draggedElement.dataset.date;
+                const targetDate = e.currentTarget.dataset.date;
+                
+                // Only allow reordering within the same date
+                if (draggedDate === targetDate) {
+                    updateOrder();
+                }
+            }
+        }
+        
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+        }
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('tr:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        function updateOrder() {
+            const rows = document.querySelectorAll('#dataBody tr');
+            const dateGroups = {};
+            
+            // Group rows by date and assign order
+            rows.forEach((row, index) => {
+                const id = parseInt(row.dataset.id);
+                const date = row.dataset.date;
+                
+                if (!dateGroups[date]) {
+                    dateGroups[date] = [];
+                }
+                dateGroups[date].push({ id, order: dateGroups[date].length });
+            });
+            
+            // Update the order in calorieData
+            Object.entries(dateGroups).forEach(([date, items]) => {
+                items.forEach(item => {
+                    const entry = calorieData.find(e => e.id === item.id);
+                    if (entry) {
+                        entry.order = item.order;
+                    }
+                });
+            });
+            
+            saveData();
+        }
+        
+        function updateSummary() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayEntries = calorieData.filter(entry => entry.date === today);
+            
+            const totals = todayEntries.reduce((sum, entry) => ({
+                calories: sum.calories + entry.calories,
+                proteins: sum.proteins + entry.proteins,
+                fats: sum.fats + entry.fats,
+                carbs: sum.carbs + entry.carbs,
+                fiber: sum.fiber + entry.fiber
+            }), { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 });
+            
+            document.getElementById('totalCalories').textContent = Math.round(totals.calories);
+            document.getElementById('totalProteins').textContent = totals.proteins.toFixed(1) + 'g';
+            document.getElementById('totalFats').textContent = totals.fats.toFixed(1) + 'g';
+            document.getElementById('totalCarbs').textContent = totals.carbs.toFixed(1) + 'g';
+            document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1) + 'g';
+            
+            // Get latest weight entry
+            const weightsWithData = calorieData.filter(entry => entry.weight > 0);
+            if (weightsWithData.length > 0) {
+                const latestWeight = weightsWithData.sort((a, b) => new Date(b.date) - new Date(a.date))[0].weight;
+                document.getElementById('latestWeight').textContent = latestWeight.toFixed(1);
+            }
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        
+        function exportToCSV() {
+            if (calorieData.length === 0) {
+                alert('No data to export. Please add at least one entry before exporting.');
+                return;
+            }
+            
+            const headers = ['Date', 'Meal Type', 'Food Item', 'Calories', 'Proteins (g)', 'Fats (g)', 'Carbs (g)', 'Fiber (g)', 'Weight (kg)'];
+            const csvContent = [
+                headers.join(','),
+                ...calorieData.map(entry => [
+                    entry.date,
+                    entry.mealType || 'Not specified',
+                    `"${entry.meal}"`,
+                    entry.calories,
+                    entry.proteins.toFixed(1),
+                    entry.fats.toFixed(1),
+                    entry.carbs.toFixed(1),
+                    entry.fiber.toFixed(1),
+                    entry.weight > 0 ? entry.weight.toFixed(1) : ''
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `calorie_tracking_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                calorieData = [];
+                updateDisplay();
+                try {
+                    localStorage.removeItem('calorieTrackerData');
+                } catch (e) {
+                    console.log('Could not clear localStorage');
+                }
+            }
+        }
+        
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    const lines = content.split('\n');
+                    
+                    if (lines.length <= 1) {
+                        alert('CSV file appears to be empty');
+                        return;
+                    }
+                    
+                    if (calorieData.length > 0) {
+                        if (!confirm('This will replace all existing data. Continue?')) {
+                            return;
+                        }
+                    }
+                    
+                    calorieData = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const values = parseCSVLine(line);
+                        
+                        if (values.length >= 8) {
+                            const entry = {
+                                id: Date.now() + i,
+                                date: values[0],
+                                mealType: values[1] === 'Not specified' ? '' : values[1],
+                                meal: values[2],
+                                calories: parseFloat(values[3]) || 0,
+                                proteins: parseFloat(values[4]) || 0,
+                                fats: parseFloat(values[5]) || 0,
+                                carbs: parseFloat(values[6]) || 0,
+                                fiber: parseFloat(values[7]) || 0,
+                                weight: values[8] ? parseFloat(values[8]) || 0 : 0
+                            };
+                            
+                            calorieData.push(entry);
+                        }
+                    }
+                    
+                    updateDisplay();
+                    saveData();
+                    alert(`Successfully imported ${calorieData.length} entries`);
+                    
+                } catch (error) {
+                    alert('Error importing CSV file. Please check the file format.');
+                    console.error(error);
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        function parseCSVLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            values.push(current.trim());
+            return values;
+        }
+        
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('calorieTrackerData');
+                if (savedData) {
+                    calorieData = JSON.parse(savedData);
+                }
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+            updateDisplay();
+        }
+        
+        function saveData() {
+            try {
+                localStorage.setItem('calorieTrackerData', JSON.stringify(calorieData));
+            } catch (e) {
+                console.log('Could not save to localStorage');
+            }
+        }
+        
+        // Calculator functions
+        let calcDisplay = '0';
+        let calcResult = false;
+        
+        function openCalculator() {
+            document.getElementById('calcModal').style.display = 'block';
+        }
+        
+        function closeCalculator() {
+            document.getElementById('calcModal').style.display = 'none';
+        }
+        
+        function updateCalcDisplay() {
+            document.getElementById('calcDisplay').textContent = calcDisplay;
+        }
+        
+        function clearCalc() {
+            calcDisplay = '0';
+            calcResult = false;
+            updateCalcDisplay();
+        }
+        
+        function appendToCalc(value) {
+            if (calcResult && !isNaN(value)) {
+                calcDisplay = value;
+                calcResult = false;
+            } else if (calcDisplay === '0' && value !== '.') {
+                calcDisplay = value;
+            } else {
+                calcDisplay += value;
+            }
+            updateCalcDisplay();
+        }
+        
+        function deleteLastCalc() {
+            if (calcDisplay.length > 1) {
+                calcDisplay = calcDisplay.slice(0, -1);
+            } else {
+                calcDisplay = '0';
+            }
+            calcResult = false;
+            updateCalcDisplay();
+        }
+        
+        function calculateResult() {
+            try {
+                const result = eval(calcDisplay);
+                calcDisplay = result.toString();
+                calcResult = true;
+                updateCalcDisplay();
+            } catch (e) {
+                calcDisplay = 'Error';
+                updateCalcDisplay();
+                setTimeout(() => {
+                    calcDisplay = '0';
+                    updateCalcDisplay();
+                }, 1500);
+            }
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('calcModal')) {
+                closeCalculator();
+            }
+        }
+        
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>
