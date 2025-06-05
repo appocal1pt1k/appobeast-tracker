@@ -5,10 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Calorie Tracker</title>
     <style id="themeStyles">
+        /* CSS Variables for theming */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%);
+            --container-bg: #0a0a0a;
+            --container-border: #2a2a2a;
+            --section-bg: #1a1a1a;
+            --section-border: #2a2a2a;
+            --input-bg: #0a0a0a;
+            --input-border: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --label-color: #ff8c42;
+            --th-bg: #1a0000;
+            --th-color: #ff8c42;
+            --row-even: #0f0f0f;
+            --row-odd: #0a0a0a;
+            --row-hover: #1a1a1a;
+            --summary-bg: #1a0000;
+            --summary-value: #ff6b35;
+            --h1-color: #ff4500;
+            --subtitle-color: #ff8c42;
+            --primary-btn: #ff4500;
+            --primary-btn-hover: #ff6b35;
+        }
+        
         /* Dark Theme (Default) */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%);
+            background: var(--bg-gradient);
             padding: 20px;
             margin: 0;
             min-height: 100vh;
@@ -32,12 +57,12 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background-color: #0a0a0a;
+            background-color: var(--container-bg);
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(255, 69, 0, 0.3), inset 0 0 20px rgba(139, 0, 0, 0.1);
             box-sizing: border-box;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--container-border);
             position: relative;
             z-index: 2;
         }
@@ -156,7 +181,7 @@
             box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
         h1 {
-            color: #ff4500;
+            color: var(--h1-color);
             text-align: center;
             margin: 0;
             font-size: 42px;
@@ -166,7 +191,7 @@
             animation: fireGlow 2s ease-in-out infinite alternate;
         }
         .fire-subtitle {
-            color: #ff8c42;
+            color: var(--subtitle-color);
             font-size: 18px;
             letter-spacing: 5px;
             text-transform: uppercase;
@@ -211,33 +236,39 @@
             height: 100%;
         }
         .input-section {
-            background-color: #1a1a1a;
-            padding: 20px;
+            background-color: var(--section-bg);
+            padding: 22px;
             border-radius: 8px;
             margin-bottom: 20px;
             position: relative;
-            overflow: hidden;
+            background-image: linear-gradient(45deg, 
+                #ff0000 0%, 
+                #ff4500 25%, 
+                #ff8c00 50%, 
+                #ffd700 75%, 
+                #ffff00 100%);
+            background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+            background-repeat: no-repeat;
+            box-shadow: 
+                inset 2px 2px 0 0 rgba(255, 0, 0, 0.5),
+                inset -2px -2px 0 0 rgba(255, 255, 0, 0.5),
+                0 0 20px rgba(255, 69, 0, 0.3);
         }
         .input-section::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
             background: linear-gradient(45deg, 
                 #ff0000 0%, 
                 #ff4500 25%, 
                 #ff8c00 50%, 
                 #ffd700 75%, 
                 #ffff00 100%);
-            padding: 2px;
             border-radius: 8px;
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
             z-index: -1;
             animation: borderGlow 3s ease-in-out infinite alternate;
         }
@@ -284,7 +315,7 @@
             box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
         }
         button {
-            background-color: #ff4500;
+            background-color: var(--primary-btn);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -295,7 +326,7 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         button:hover {
-            background-color: #ff6b35;
+            background-color: var(--primary-btn-hover);
             box-shadow: 0 0 15px rgba(255, 69, 0, 0.7), 0 4px 8px rgba(0,0,0,0.3);
             transform: translateY(-2px);
         }
@@ -564,7 +595,7 @@
                     <button class="theme-btn" onclick="setTheme('light')">☀️ Light</button>
                 </div>
             </div>
-            <img src="https://i.imgur.com/NejDizh.png" alt="APPO Logo" class="logo">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" alt="APPO Logo" class="logo">
             <h1>APPOBEAST CALORIE TRACKER</h1>
             <div class="fire-subtitle">FUEL THE FIRE WITHIN</div>
         </div>
@@ -1607,8 +1638,8 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            updateThemeStyles();
-            loadSavedTheme();
+            // Apply dark theme immediately
+            setTheme('dark');
             initializeSync();
         });
         
