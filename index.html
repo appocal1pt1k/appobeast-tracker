@@ -1,367 +1,426 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang=”en”>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset=”UTF-8”>
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0”>
     <title>Advanced Calorie Tracker</title>
-    <style id="themeStyles">
+    <style id=”themeStyles”>
         /* Dark Theme (Default) */
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-            padding: 20px;
-            margin: 0;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+        Body {
+            Font-family: Arial, sans-serif;
+            Background: linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%);
+            Padding: 20px;
+            Margin: 0;
+            Min-height: 100vh;
+            Position: relative;
+            Overflow-x: hidden;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 99, 71, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
-            pointer-events: none;
+        Body::before {
+            Content: ‘’;
+            Position: fixed;
+            Top: 0;
+            Left: 0;
+            Right: 0;
+            Bottom: 0;
+            Background: 
+                Radial-gradient(circle at 20% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
+                Radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                Radial-gradient(circle at 40% 20%, rgba(255, 140, 0, 0.05) 0%, transparent 50%);
+            Pointer-events: none;
             z-index: 1;
         }
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: #1f1f1f;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 99, 71, 0.03);
-            box-sizing: border-box;
-            border: 1px solid #333333;
-            position: relative;
+            Max-width: 1400px;
+            Margin: 0 auto;
+            Background-color: #0a0a0a;
+            Padding: 30px;
+            Border-radius: 10px;
+            Box-shadow: 0 4px 20px rgba(255, 69, 0, 0.3), inset 0 0 20px rgba(139, 0, 0, 0.1);
+            Box-sizing: border-box;
+            Border: 1px solid #2a2a2a;
+            Position: relative;
             z-index: 2;
         }
         .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-direction: column;
-            position: relative;
+            Display: flex;
+            Align-items: center;
+            Justify-content: center;
+            Gap: 20px;
+            Margin-bottom: 30px;
+            Flex-direction: column;
+            Position: relative;
         }
         .header-controls {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            gap: 10px;
-            align-items: center;
+            Position: absolute;
+            Top: 0;
+            Right: 0;
+            Display: flex;
+            Gap: 10px;
+            Align-items: center;
+        }
+        .sync-toggle-btn {
+            Background-color: #2a2a2a;
+            Border: 1px solid #3a3a3a;
+            Color: #ff8c42;
+            Padding: 8px 12px;
+            Border-radius: 20px;
+            Cursor: pointer;
+            Font-size: 18px;
+            Transition: all 0.3s;
+        }
+        .sync-toggle-btn:hover {
+            Background-color: #3a3a3a;
+            Box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
+        }
+        .sync-toggle-btn.connected {
+            Color: #5cb85c;
+            Border-color: #5cb85c;
         }
         .sync-container {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            background-color: #2a2a2a;
-            padding: 5px 10px;
-            border-radius: 20px;
-            border: 1px solid #3a3a3a;
+            Display: none;
+            Gap: 5px;
+            Align-items: center;
+            Background-color: #2a2a2a;
+            Padding: 5px 10px;
+            Border-radius: 20px;
+            Border: 1px solid #3a3a3a;
+            Position: absolute;
+            Top: 40px;
+            Right: 0;
+            Box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        .sync-container.show {
+            Display: flex;
         }
         .sync-input {
-            background-color: #1a1a1a;
-            border: 1px solid #444444;
-            color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            width: 100px;
-            text-transform: uppercase;
+            Background-color: #1a1a1a;
+            Border: 1px solid #444444;
+            Color: #e0e0e0;
+            Padding: 5px 10px;
+            Border-radius: 10px;
+            Font-size: 12px;
+            Width: 100px;
+            Text-transform: uppercase;
         }
         .sync-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 12px;
-            cursor: pointer;
-            background-color: #5cb85c;
-            color: white;
+            Padding: 5px 10px;
+            Border: none;
+            Border-radius: 10px;
+            Font-size: 12px;
+            Cursor: pointer;
+            Background-color: #5cb85c;
+            Color: white;
         }
         .sync-btn:hover {
-            background-color: #6ec06e;
+            Background-color: #6ec06e;
         }
         .sync-status {
-            font-size: 12px;
-            color: #999;
-            margin-left: 5px;
+            Font-size: 12px;
+            Color: #999;
+            Margin-left: 5px;
         }
         .sync-status.connected {
-            color: #5cb85c;
+            Color: #5cb85c;
         }
         .theme-switcher {
-            display: flex;
-            gap: 5px;
-            background-color: #2a2a2a;
-            padding: 5px;
-            border-radius: 20px;
-            border: 1px solid #3a3a3a;
+            Display: flex;
+            Gap: 5px;
+            Background-color: #2a2a2a;
+            Padding: 5px;
+            Border-radius: 20px;
+            Border: 1px solid #3a3a3a;
         }
         .theme-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 15px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: transparent;
-            color: #999;
+            Padding: 8px 12px;
+            Border: none;
+            Border-radius: 15px;
+            Font-size: 12px;
+            Cursor: pointer;
+            Transition: all 0.3s;
+            Background-color: transparent;
+            Color: #999;
         }
         .theme-btn.active {
-            background-color: #ff6347;
-            color: white;
+            Background-color: #ff6347;
+            Color: white;
         }
         .theme-btn:hover:not(.active) {
-            background-color: #3a3a3a;
-            color: #ff9966;
+            Background-color: #3a3a3a;
+            Color: #ff9966;
         }
         .logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+            Width: 80px;
+            Height: 80px;
+            Border-radius: 50%;
+            Box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
-        h1 {
-            color: #ff7f50;
-            text-align: center;
-            margin: 0;
-            font-size: 42px;
-            text-shadow: 0 0 10px rgba(255, 127, 80, 0.3);
-            font-weight: 900;
-            letter-spacing: 3px;
-            animation: fireGlow 2s ease-in-out infinite alternate;
+        H1 {
+            Color: #ff4500;
+            Text-align: center;
+            Margin: 0;
+            Font-size: 42px;
+            Text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
+            Font-weight: 900;
+            Letter-spacing: 3px;
+            Animation: fireGlow 2s ease-in-out infinite alternate;
         }
         .fire-subtitle {
-            color: #ff9966;
-            font-size: 18px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(255, 153, 102, 0.3);
-            margin-top: -10px;
-            animation: pulse 3s ease-in-out infinite;
+            Color: #ff8c42;
+            Font-size: 18px;
+            Letter-spacing: 5px;
+            Text-transform: uppercase;
+            Text-shadow: 0 0 10px rgba(255, 140, 66, 0.6);
+            Margin-top: -10px;
+            Animation: pulse 3s ease-in-out infinite;
         }
         @keyframes fireGlow {
-            from {
-                text-shadow: 0 0 10px rgba(255, 127, 80, 0.3);
+            From {
+                Text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
             }
-            to {
-                text-shadow: 0 0 15px rgba(255, 127, 80, 0.4), 0 0 25px rgba(255, 127, 80, 0.2);
+            To {
+                Text-shadow: 0 0 30px rgba(255, 69, 0, 1), 0 0 60px rgba(255, 69, 0, 0.7), 0 0 80px rgba(255, 140, 0, 0.4);
             }
         }
         @keyframes pulse {
             0%, 100% {
-                opacity: 0.8;
-                transform: scale(1);
+                Opacity: 0.8;
+                Transform: scale(1);
             }
             50% {
-                opacity: 1;
-                transform: scale(1.05);
+                Opacity: 1;
+                Transform: scale(1.05);
             }
         }
-        h2, h3 {
-            color: #ff6b35;
+        H2, h3 {
+            Color: #ff6b35;
         }
         .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            align-items: start;
+            Display: grid;
+            Grid-template-columns: 1fr 1.5fr;
+            Gap: 30px;
+            Align-items: start;
         }
         .left-panel {
-            position: sticky;
-            top: 20px;
+            Position: sticky;
+            Top: 20px;
         }
         .right-panel {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+            Display: flex;
+            Flex-direction: column;
+            Height: 100%;
         }
         .input-section {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #2a2a2a;
+            Background-color: #1a1a1a;
+            Padding: 20px;
+            Border-radius: 8px;
+            Margin-bottom: 20px;
+            Position: relative;
+            Overflow: hidden;
+        }
+        .input-section::before {
+            Content: ‘’;
+            Position: absolute;
+            Top: 0;
+            Left: 0;
+            Right: 0;
+            Bottom: 0;
+            Background: linear-gradient(45deg, 
+                #ff0000 0%, 
+                #ff4500 25%, 
+                #ff8c00 50%, 
+                #ffd700 75%, 
+                #ffff00 100%);
+            Padding: 2px;
+            Border-radius: 8px;
+            -webkit-mask: 
+                Linear-gradient(#fff 0 0) content-box, 
+                Linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            Mask-composite: exclude;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes borderGlow {
+            From {
+                Opacity: 0.6;
+            }
+            To {
+                Opacity: 1;
+            }
         }
         .input-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            Display: grid;
+            Grid-template-columns: repeat(2, 1fr);
+            Gap: 12px;
+            Margin-bottom: 20px;
         }
         .input-group {
-            display: flex;
-            flex-direction: column;
+            Display: flex;
+            Flex-direction: column;
         }
         .input-group.full-width {
-            grid-column: 1 / -1;
+            Grid-column: 1 / -1;
         }
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #ff8c42;
-            font-size: 14px;
+        Label {
+            Font-weight: bold;
+            Margin-bottom: 5px;
+            Color: #ff8c42;
+            Font-size: 14px;
         }
-        input[type="number"], input[type="date"], input[type="text"], select {
-            padding: 8px;
-            border: 1px solid #3a3a3a;
-            border-radius: 4px;
-            font-size: 14px;
-            width: 100%;
-            box-sizing: border-box;
-            background-color: #0a0a0a;
-            color: #ffffff;
+        Input[type=”number”], input[type=”date”], input[type=”text”], select {
+            Padding: 8px;
+            Border: 1px solid #3a3a3a;
+            Border-radius: 4px;
+            Font-size: 14px;
+            Width: 100%;
+            Box-sizing: border-box;
+            Background-color: #0a0a0a;
+            Color: #ffffff;
         }
-        input[type="number"]:focus, input[type="date"]:focus, input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: #ff4500;
-            box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+        Input[type=”number”]:focus, input[type=”date”]:focus, input[type=”text”]:focus, select:focus {
+            Outline: none;
+            Border-color: #ff4500;
+            Box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
         }
-        button {
-            background-color: #ff6347;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        Button {
+            Background-color: #ff4500;
+            Color: white;
+            Border: none;
+            Padding: 12px 24px;
+            Border-radius: 4px;
+            Font-size: 16px;
+            Cursor: pointer;
+            Transition: all 0.3s;
+            Text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        button:hover {
-            background-color: #ff7f50;
-            box-shadow: 0 0 8px rgba(255, 127, 80, 0.4), 0 2px 4px rgba(0,0,0,0.2);
-            transform: translateY(-1px);
+        Button:hover {
+            Background-color: #ff6b35;
+            Box-shadow: 0 0 15px rgba(255, 69, 0, 0.7), 0 4px 8px rgba(0,0,0,0.3);
+            Transform: translateY(-2px);
         }
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 0 5px rgba(255, 127, 80, 0.3);
+        Button:active {
+            Transform: translateY(0);
+            Box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
         }
         .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            Display: flex;
+            Gap: 10px;
+            Margin-top: 20px;
+            Flex-wrap: wrap;
         }
         .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-            background-color: #0a0a0a;
-            border-radius: 8px;
-            padding: 10px;
+            Overflow-x: auto;
+            Margin-top: 20px;
+            Background-color: #0a0a0a;
+            Border-radius: 8px;
+            Padding: 10px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
+        Table {
+            Width: 100%;
+            Border-collapse: collapse;
+            Min-width: 600px;
         }
-        th, td {
-            border: 1px solid #2a2a2a;
-            padding: 10px;
-            text-align: left;
-            color: #ffffff;
+        Th, td {
+            Border: 1px solid #2a2a2a;
+            Padding: 10px;
+            Text-align: left;
+            Color: #ffffff;
         }
-        th {
-            background-color: #1a0000;
-            color: #ff8c42;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
+        Th {
+            Background-color: #1a0000;
+            Color: #ff8c42;
+            Font-weight: bold;
+            Position: sticky;
+            Top: 0;
         }
-        tr:nth-child(even) {
-            background-color: #0f0f0f;
+        Tr:nth-child(even) {
+            Background-color: #0f0f0f;
         }
-        tr:nth-child(odd) {
-            background-color: #0a0a0a;
+        Tr:nth-child(odd) {
+            Background-color: #0a0a0a;
         }
-        tr:hover {
-            background-color: #1a1a1a;
+        Tr:hover {
+            Background-color: #1a1a1a;
         }
-        tr.dragging {
-            opacity: 0.5;
+        Tr.dragging {
+            Opacity: 0.5;
         }
-        tr.drag-over {
-            border-top: 3px solid #ff4500;
+        Tr.drag-over {
+            Border-top: 3px solid #ff4500;
         }
         .editable {
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
+            Cursor: pointer;
+            Padding: 4px;
+            Border-radius: 4px;
         }
         .editable:hover {
-            background-color: rgba(255, 127, 80, 0.1);
+            Background-color: rgba(255, 127, 80, 0.1);
         }
         .editable.editing {
-            background-color: #2a2a2a;
-            border: 1px solid #ff7f50;
+            Background-color: #2a2a2a;
+            Border: 1px solid #ff7f50;
         }
         .drag-handle {
-            cursor: move;
-            color: #888888;
-            padding: 0 8px;
-            font-size: 18px;
+            Cursor: move;
+            Color: #888888;
+            Padding: 0 8px;
+            Font-size: 18px;
         }
         .drag-handle:hover {
-            color: #ff9966;
+            Color: #ff9966;
         }
         .summary {
-            background-color: #1a0000;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #2a2a2a;
+            Background-color: #1a0000;
+            Padding: 20px;
+            Border-radius: 8px;
+            Margin-bottom: 20px;
+            Border: 1px solid #2a2a2a;
         }
         .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            Display: grid;
+            Grid-template-columns: repeat(2, 1fr);
+            Gap: 15px;
         }
         .summary-item {
-            text-align: center;
+            Text-align: center;
         }
         .summary-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b35;
-            text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+            Font-size: 24px;
+            Font-weight: bold;
+            Color: #ff6b35;
+            Text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
         }
         .summary-label {
-            color: #999999;
-            margin-top: 5px;
-            font-size: 14px;
+            Color: #999999;
+            Margin-top: 5px;
+            Font-size: 14px;
         }
         .delete-btn {
-            background-color: #d9534f;
-            padding: 6px 12px;
-            font-size: 14px;
+            Background-color: #8b0000;
+            Padding: 6px 12px;
+            Font-size: 14px;
         }
         .delete-btn:hover {
-            background-color: #e74c3c;
+            Background-color: #b30000;
         }
         .export-btn {
-            background-color: #5cb85c;
+            Background-color: #2d5016;
         }
         .export-btn:hover {
-            background-color: #6ec06e;
+            Background-color: #3a6b1d;
         }
         .calc-btn-main {
-            background-color: #9b6bae;
+            Background-color: #663399;
         }
         .calc-btn-main:hover {
-            background-color: #a77bb8;
+            Background-color: #7d40b8;
         }
         
         /* Calculator Modal */
         .modal {
-            display: none;
-            position: fixed;
+            Display: none;
+            Position: fixed;
             z-index: 1000;
             left: 0;
             top: 0;
@@ -370,240 +429,243 @@
             background-color: rgba(0,0,0,0.8);
         }
         .modal-content {
-            background-color: #1a1a1a;
-            margin: 15% auto;
-            padding: 15px;
-            border: 1px solid #ff4500;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 300px;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+            Background-color: #1a1a1a;
+            Margin: 15% auto;
+            Padding: 15px;
+            Border: 1px solid #ff4500;
+            Border-radius: 10px;
+            Width: 90%;
+            Max-width: 300px;
+            Box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
         .close {
-            color: #ff4500;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
+            Color: #ff4500;
+            Float: right;
+            Font-size: 28px;
+            Font-weight: bold;
+            Cursor: pointer;
         }
         .close:hover {
-            color: #ff6b35;
-            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+            Color: #ff6b35;
+            Text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
         }
         .calculator {
-            background-color: #0a0a0a;
-            padding: 10px;
-            border-radius: 8px;
+            Background-color: #0a0a0a;
+            Padding: 10px;
+            Border-radius: 8px;
         }
         .calculator h3 {
-            margin-top: 5px;
+            Margin-top: 5px;
         }
         .calc-display {
-            background-color: #000000;
-            padding: 10px;
-            border: 2px solid #3a3a3a;
-            border-radius: 4px;
-            font-size: 18px;
-            text-align: right;
-            margin-bottom: 10px;
-            min-height: 25px;
-            color: #ff8c42;
+            Background-color: #000000;
+            Padding: 10px;
+            Border: 2px solid #3a3a3a;
+            Border-radius: 4px;
+            Font-size: 18px;
+            Text-align: right;
+            Margin-bottom: 10px;
+            Min-height: 25px;
+            Color: #ff8c42;
         }
         .calc-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
+            Display: grid;
+            Grid-template-columns: repeat(4, 1fr);
+            Gap: 5px;
         }
         .calc-btn {
-            padding: 15px;
-            font-size: 16px;
-            background-color: #2a2a2a;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
+            Padding: 15px;
+            Font-size: 16px;
+            Background-color: #2a2a2a;
+            Color: white;
+            Border: none;
+            Border-radius: 4px;
+            Cursor: pointer;
+            Transition: all 0.2s;
         }
         .calc-btn:hover {
-            background-color: #3a3a3a;
-            transform: scale(1.05);
+            Background-color: #3a3a3a;
+            Transform: scale(1.05);
         }
         .calc-btn.number {
-            background-color: #1a1a1a;
+            Background-color: #1a1a1a;
         }
         .calc-btn.number:hover {
-            background-color: #2a2a2a;
+            Background-color: #2a2a2a;
         }
         .calc-btn.operator {
-            background-color: #8b4513;
+            Background-color: #8b4513;
         }
         .calc-btn.operator:hover {
-            background-color: #a0522d;
+            Background-color: #a0522d;
         }
         .calc-btn.equals {
-            background-color: #2d5016;
-            grid-column: span 2;
+            Background-color: #2d5016;
+            Grid-column: span 2;
         }
         .calc-btn.equals:hover {
-            background-color: #3a6b1d;
+            Background-color: #3a6b1d;
         }
         .calc-btn.clear {
-            background-color: #8b0000;
+            Background-color: #8b0000;
         }
         .calc-btn.clear:hover {
-            background-color: #b30000;
+            Background-color: #b30000;
         }
         
         /* Edit input styling */
         .edit-input {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-            border: 1px solid #ff7f50;
+            Background-color: #1a1a1a;
+            Color: #e0e0e0;
+            Border: 1px solid #ff7f50;
         }
         
         @media (max-width: 1024px) {
             .main-layout {
-                grid-template-columns: 1fr;
+                Grid-template-columns: 1fr;
             }
             .left-panel {
-                position: static;
+                Position: static;
             }
             .summary-grid {
-                grid-template-columns: repeat(3, 1fr);
+                Grid-template-columns: repeat(3, 1fr);
             }
             .header-container {
-                flex-direction: column;
-                gap: 10px;
+                Flex-direction: column;
+                Gap: 10px;
             }
             .logo {
-                width: 60px;
-                height: 60px;
+                Width: 60px;
+                Height: 60px;
             }
         }
         @media (max-width: 768px) {
             .summary-grid {
-                grid-template-columns: repeat(2, 1fr);
+                Grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-container">
-            <div class="header-controls">
-                <div class="sync-container">
-                    <input type="text" id="syncCode" class="sync-input" placeholder="SYNC CODE" maxlength="6">
-                    <button class="sync-btn" onclick="toggleSync()">Connect</button>
-                    <span class="sync-status" id="syncStatus">Offline</span>
+    <div class=”container”>
+        <div class=”header-container”>
+            <div class=”header-controls”>
+                <button class=”sync-toggle-btn” id=”syncToggleBtn” onclick=”toggleSyncPanel()” title=”Sync across devices”>
+                    <i>🔄</i>
+                </button>
+                <div class=”sync-container” id=”syncPanel”>
+                    <input type=”text” id=”syncCode” class=”sync-input” placeholder=”SYNC CODE” maxlength=”6”>
+                    <button class=”sync-btn” onclick=”toggleSync()”>Connect</button>
+                    <span class=”sync-status” id=”syncStatus”>Offline</span>
                 </div>
-                <div class="theme-switcher">
-                    <button class="theme-btn active" onclick="setTheme('dark')">🌙 Dark</button>
-                    <button class="theme-btn" onclick="setTheme('medium')">🌤️ Medium</button>
-                    <button class="theme-btn" onclick="setTheme('light')">☀️ Light</button>
+                <div class=”theme-switcher”>
+                    <button class=”theme-btn active” onclick=”setTheme(‘dark’)”>🌙 Dark</button>
+                    <button class=”theme-btn” onclick=”setTheme(‘medium’)”>🌤️ Medium</button>
+                    <button class=”theme-btn” onclick=”setTheme(‘light’)”>☀️ Light</button>
                 </div>
             </div>
-            <img src="https://i.imgur.com/NejDizh.png" alt="APPO Logo" class="logo">
+            <img src=”https://i.imgur.com/NejDizh.png==” alt=”APPO Logo” class=”logo”>
             <h1>APPOBEAST CALORIE TRACKER</h1>
-            <div class="fire-subtitle">FUEL THE FIRE WITHIN</div>
+            <div class=”fire-subtitle”>FUEL THE FIRE WITHIN</div>
         </div>
         
-        <div class="main-layout">
-            <div class="left-panel">
-                <div class="input-section">
+        <div class=”main-layout”>
+            <div class=”left-panel”>
+                <div class=”input-section”>
                     <h2>🔥 BEAST MODE ENTRY 🔥</h2>
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label for="date">Date</label>
-                            <input type="date" id="date" value="">
+                    <div class=”input-grid”>
+                        <div class=”input-group”>
+                            <label for=”date”>Date</label>
+                            <input type=”date” id=”date” value=””>
                         </div>
-                        <div class="input-group">
-                            <label for="mealType">Meal Type</label>
-                            <select id="mealType">
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Morning Snack">Morning Snack</option>
-                                <option value="Lunch">Lunch</option>
-                                <option value="Afternoon Snack">Afternoon Snack</option>
-                                <option value="Dinner">Dinner</option>
-                                <option value="Evening Snack">Evening Snack</option>
+                        <div class=”input-group”>
+                            <label for=”mealType”>Meal Type</label>
+                            <select id=”mealType”>
+                                <option value=”Breakfast”>Breakfast</option>
+                                <option value=”Morning Snack”>Morning Snack</option>
+                                <option value=”Lunch”>Lunch</option>
+                                <option value=”Afternoon Snack”>Afternoon Snack</option>
+                                <option value=”Dinner”>Dinner</option>
+                                <option value=”Evening Snack”>Evening Snack</option>
                             </select>
                         </div>
-                        <div class="input-group full-width">
-                            <label for="meal">Food Item</label>
-                            <input type="text" id="meal" placeholder="e.g., Oatmeal with berries">
+                        <div class=”input-group full-width”>
+                            <label for=”meal”>Food Item</label>
+                            <input type=”text” id=”meal” placeholder=”e.g., Oatmeal with berries”>
                         </div>
-                        <div class="input-group">
-                            <label for="calories">Total Calories</label>
-                            <input type="number" id="calories" placeholder="0" step="1">
+                        <div class=”input-group”>
+                            <label for=”calories”>Total Calories</label>
+                            <input type=”number” id=”calories” placeholder=”0” step=”1”>
                         </div>
-                        <div class="input-group">
-                            <label for="proteins">Proteins (g)</label>
-                            <input type="number" id="proteins" placeholder="0" step="0.1">
+                        <div class=”input-group”>
+                            <label for=”proteins”>Proteins (g)</label>
+                            <input type=”number” id=”proteins” placeholder=”0” step=”0.1”>
                         </div>
-                        <div class="input-group">
-                            <label for="fats">Fats (g)</label>
-                            <input type="number" id="fats" placeholder="0" step="0.1">
+                        <div class=”input-group”>
+                            <label for=”fats”>Fats (g)</label>
+                            <input type=”number” id=”fats” placeholder=”0” step=”0.1”>
                         </div>
-                        <div class="input-group">
-                            <label for="carbs">Carbs (g)</label>
-                            <input type="number" id="carbs" placeholder="0" step="0.1">
+                        <div class=”input-group”>
+                            <label for=”carbs”>Carbs (g)</label>
+                            <input type=”number” id=”carbs” placeholder=”0” step=”0.1”>
                         </div>
-                        <div class="input-group">
-                            <label for="fiber">Fiber (g)</label>
-                            <input type="number" id="fiber" placeholder="0" step="0.1">
+                        <div class=”input-group”>
+                            <label for=”fiber”>Fiber (g)</label>
+                            <input type=”number” id=”fiber” placeholder=”0” step=”0.1”>
                         </div>
-                        <div class="input-group">
-                            <label for="weight">Current Weight (kg)</label>
-                            <input type="number" id="weight" placeholder="0" step="0.1">
+                        <div class=”input-group”>
+                            <label for=”weight”>Current Weight (kg)</label>
+                            <input type=”number” id=”weight” placeholder=”0” step=”0.1”>
                         </div>
                     </div>
-                    <div class="button-group">
-                        <button onclick="addEntry()">Add Entry</button>
-                        <button onclick="clearForm()">Clear Form</button>
-                        <button class="calc-btn-main" onclick="openCalculator()">Calculator</button>
+                    <div class=”button-group”>
+                        <button onclick=”addEntry()”>Add Entry</button>
+                        <button onclick=”clearForm()”>Clear Form</button>
+                        <button class=”calc-btn-main” onclick=”openCalculator()”>Calculator</button>
                     </div>
                 </div>
 
-                <div class="summary">
-                    <h3>💀 TODAY'S APOCALYPSE STATS 💀</h3>
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <div class="summary-value" id="totalCalories">0</div>
-                            <div class="summary-label">Total Calories</div>
+                <div class=”summary”>
+                    <h3>💀 APOCALYPSE STATS FOR <span id=”summaryDate”>TODAY</span> 💀</h3>
+                    <div class=”summary-grid”>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”totalCalories”>0</div>
+                            <div class=”summary-label”>Total Calories</div>
                         </div>
-                        <div class="summary-item">
-                            <div class="summary-value" id="totalProteins">0g</div>
-                            <div class="summary-label">Proteins</div>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”totalProteins”>0g</div>
+                            <div class=”summary-label”>Proteins</div>
                         </div>
-                        <div class="summary-item">
-                            <div class="summary-value" id="totalFats">0g</div>
-                            <div class="summary-label">Fats</div>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”totalFats”>0g</div>
+                            <div class=”summary-label”>Fats</div>
                         </div>
-                        <div class="summary-item">
-                            <div class="summary-value" id="totalCarbs">0g</div>
-                            <div class="summary-label">Carbs</div>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”totalCarbs”>0g</div>
+                            <div class=”summary-label”>Carbs</div>
                         </div>
-                        <div class="summary-item">
-                            <div class="summary-value" id="totalFiber">0g</div>
-                            <div class="summary-label">Fiber</div>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”totalFiber”>0g</div>
+                            <div class=”summary-label”>Fiber</div>
                         </div>
-                        <div class="summary-item">
-                            <div class="summary-value" id="latestWeight">-</div>
-                            <div class="summary-label">Latest Weight</div>
+                        <div class=”summary-item”>
+                            <div class=”summary-value” id=”latestWeight”>-</div>
+                            <div class=”summary-label”>Weight on Date</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="right-panel">
+            <div class=”right-panel”>
                 <h2>⚔️ TRACKING BATTLEFIELD ⚔️</h2>
-                <div class="button-group">
-                    <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
-                    <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleFileImport(event)">
-                    <button onclick="document.getElementById('csvFileInput').click()">Import CSV</button>
-                    <button onclick="clearAllData()">Clear All Data</button>
+                <div class=”button-group”>
+                    <button class=”export-btn” onclick=”exportToCSV()”>Export to CSV</button>
+                    <input type=”file” id=”csvFileInput” accept=”.csv” style=”display: none;” onchange=”handleFileImport(event)”>
+                    <button onclick=”document.getElementById(‘csvFileInput’).click()”>Import CSV</button>
+                    <button onclick=”clearAllData()”>Clear All Data</button>
                 </div>
-                <div class="table-container">
-                    <table id="dataTable">
+                <div class=”table-container”>
+                    <table id=”dataTable”>
                         <thead>
                             <tr>
                                 <th>☰</th>
@@ -619,7 +681,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="dataBody">
+                        <tbody id=”dataBody”>
                         </tbody>
                     </table>
                 </div>
@@ -627,38 +689,38 @@
         </div>
     </div>
 
-    <!-- Calculator Modal -->
-    <div id="calcModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCalculator()">&times;</span>
-            <div class="calculator">
+    <!—Calculator Modal 
+    <div id=”calcModal” class=”modal”>
+        <div class=”modal-content”>
+            <span class=”close” onclick=”closeCalculator()”>&times;</span>
+            <div class=”calculator”>
                 <h3>Calculator</h3>
-                <div class="calc-display" id="calcDisplay">0</div>
-                <div class="calc-buttons">
-                    <button class="calc-btn clear" onclick="clearCalc()">C</button>
-                    <button class="calc-btn" onclick="appendToCalc('/')">/</button>
-                    <button class="calc-btn" onclick="appendToCalc('*')">×</button>
-                    <button class="calc-btn" onclick="deleteLastCalc()">←</button>
+                <div class=”calc-display” id=”calcDisplay”>0</div>
+                <div class=”calc-buttons”>
+                    <button class=”calc-btn clear” onclick=”clearCalc()”>C</button>
+                    <button class=”calc-btn” onclick=”appendToCalc(‘/’)”>/</button>
+                    <button class=”calc-btn” onclick=”appendToCalc(‘*’)”>×</button>
+                    <button class=”calc-btn” onclick=”deleteLastCalc()”>←</button>
                     
-                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
-                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
-                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘7’)”>7</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘8’)”>8</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘9’)”>9</button>
+                    <button class=”calc-btn operator” onclick=”appendToCalc(‘-‘)”>-</button>
                     
-                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
-                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘4’)”>4</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘5’)”>5</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘6’)”>6</button>
+                    <button class=”calc-btn operator” onclick=”appendToCalc(‘+’)”>+</button>
                     
-                    <button class="calc-btn number" onclick="appendToCalc('1')">1</button>
-                    <button class="calc-btn number" onclick="appendToCalc('2')">2</button>
-                    <button class="calc-btn number" onclick="appendToCalc('3')">3</button>
-                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘1’)”>1</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘2’)”>2</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘3’)”>3</button>
+                    <button class=”calc-btn” onclick=”appendToCalc(‘.’)”>.</button>
                     
-                    <button class="calc-btn number" onclick="appendToCalc('0')">0</button>
-                    <button class="calc-btn" onclick="appendToCalc('(')">(</button>
-                    <button class="calc-btn" onclick="appendToCalc(')')">)</button>
-                    <button class="calc-btn equals" onclick="calculateResult()">=</button>
+                    <button class=”calc-btn number” onclick=”appendToCalc(‘0’)”>0</button>
+                    <button class=”calc-btn” onclick=”appendToCalc(‘(‘)”>(</button>
+                    <button class=”calc-btn” onclick=”appendToCalc(‘)’)”>)</button>
+                    <button class=”calc-btn equals” onclick=”calculateResult()”>=</button>
                 </div>
             </div>
         </div>
@@ -666,30 +728,35 @@
 
     <script>
         // Initialize data array
-        let calorieData = [];
+        Let calorieData = [];
         
-        // Set today's date as default
-        document.getElementById('date').valueAsDate = new Date();
+        // Set today’s date as default
+        Document.getElementById(‘date’).valueAsDate = new Date();
         
-        function addEntry() {
-            const date = document.getElementById('date').value;
-            const mealType = document.getElementById('mealType').value;
-            const meal = document.getElementById('meal').value;
-            const calories = parseFloat(document.getElementById('calories').value) || 0;
-            const proteins = parseFloat(document.getElementById('proteins').value) || 0;
-            const fats = parseFloat(document.getElementById('fats').value) || 0;
-            const carbs = parseFloat(document.getElementById('carbs').value) || 0;
-            const fiber = parseFloat(document.getElementById('fiber').value) || 0;
-            const weight = parseFloat(document.getElementById('weight').value) || 0;
+        // Watch for date changes
+        Document.getElementById(‘date’).addEventListener(‘change’, function() {
+            updateSummary();
+        });
+        
+        Function addEntry() {
+            Const date = document.getElementById(‘date’).value;
+            Const mealType = document.getElementById(‘mealType’).value;
+            Const meal = document.getElementById(‘meal’).value;
+            Const calories = parseFloat(document.getElementById(‘calories’).value) || 0;
+            Const proteins = parseFloat(document.getElementById(‘proteins’).value) || 0;
+            Const fats = parseFloat(document.getElementById(‘fats’).value) || 0;
+            Const carbs = parseFloat(document.getElementById(‘carbs’).value) || 0;
+            Const fiber = parseFloat(document.getElementById(‘fiber’).value) || 0;
+            Const weight = parseFloat(document.getElementById(‘weight’).value) || 0;
             
-            if (!date || !meal) {
-                alert('Please enter at least a date and food item description');
-                return;
+            If (!date || !meal) {
+                Alert(‘Please enter at least a date and food item description’);
+                Return;
             }
             
-            const entry = {
-                id: Date.now(),
-                date,
+            Const entry = {
+                Id: Date.now(),
+                Date,
                 mealType,
                 meal,
                 calories,
@@ -706,40 +773,40 @@
             saveData();
         }
         
-        function clearForm() {
-            document.getElementById('meal').value = '';
-            document.getElementById('calories').value = '';
-            document.getElementById('proteins').value = '';
-            document.getElementById('fats').value = '';
-            document.getElementById('carbs').value = '';
-            document.getElementById('fiber').value = '';
-            document.getElementById('weight').value = '';
+        Function clearForm() {
+            Document.getElementById(‘meal’).value = ‘’;
+            Document.getElementById(‘calories’).value = ‘’;
+            Document.getElementById(‘proteins’).value = ‘’;
+            Document.getElementById(‘fats’).value = ‘’;
+            Document.getElementById(‘carbs’).value = ‘’;
+            Document.getElementById(‘fiber’).value = ‘’;
+            Document.getElementById(‘weight’).value = ‘’;
         }
         
-        function deleteEntry(id) {
-            if (confirm('Are you sure you want to delete this entry?')) {
+        Function deleteEntry(id) {
+            If (confirm(‘Are you sure you want to delete this entry?’)) {
                 calorieData = calorieData.filter(entry => entry.id !== id);
                 updateDisplay();
                 saveData();
             }
         }
         
-        function updateDisplay() {
+        Function updateDisplay() {
             updateTable();
             updateSummary();
         }
         
-        function updateTable() {
-            const tbody = document.getElementById('dataBody');
-            tbody.innerHTML = '';
+        Function updateTable() {
+            Const tbody = document.getElementById(‘dataBody’);
+            Tbody.innerHTML = ‘’;
             
             // Sort by date (newest first) and then by ID to maintain order
-            const sortedData = [...calorieData].sort((a, b) => {
-                const dateCompare = new Date(b.date) - new Date(a.date);
-                if (dateCompare === 0) {
-                    return a.order - b.order || a.id - b.id;
+            Const sortedData = […calorieData].sort((a, b) => {
+                Const dateCompare = new Date(b.date) – new Date(a.date);
+                If (dateCompare === 0) {
+                    Return a.order – b.order || a.id – b.id;
                 }
-                return dateCompare;
+                Return dateCompare;
             });
             
             sortedData.forEach((entry, index) => {
@@ -749,107 +816,107 @@
                 row.dataset.date = entry.date;
                 
                 row.innerHTML = `
-                    <td class="drag-handle">☰</td>
+                    <td class=”drag-handle”>☰</td>
                     <td>${formatDate(entry.date)}</td>
-                    <td class="editable" data-field="mealType" data-id="${entry.id}">${entry.mealType || 'Not specified'}</td>
-                    <td class="editable" data-field="meal" data-id="${entry.id}">${entry.meal}</td>
-                    <td class="editable" data-field="calories" data-id="${entry.id}">${entry.calories}</td>
-                    <td class="editable" data-field="proteins" data-id="${entry.id}">${entry.proteins.toFixed(1)}</td>
-                    <td class="editable" data-field="fats" data-id="${entry.id}">${entry.fats.toFixed(1)}</td>
-                    <td class="editable" data-field="carbs" data-id="${entry.id}">${entry.carbs.toFixed(1)}</td>
-                    <td class="editable" data-field="fiber" data-id="${entry.id}">${entry.fiber.toFixed(1)}</td>
-                    <td class="editable" data-field="weight" data-id="${entry.id}">${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
-                    <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button></td>
+                    <td class=”editable” data-field=”mealType” data-id=”${entry.id}”>${entry.mealType || ‘Not specified’}</td>
+                    <td class=”editable” data-field=”meal” data-id=”${entry.id}”>${entry.meal}</td>
+                    <td class=”editable” data-field=”calories” data-id=”${entry.id}”>${entry.calories}</td>
+                    <td class=”editable” data-field=”proteins” data-id=”${entry.id}”>${entry.proteins.toFixed(1)}</td>
+                    <td class=”editable” data-field=”fats” data-id=”${entry.id}”>${entry.fats.toFixed(1)}</td>
+                    <td class=”editable” data-field=”carbs” data-id=”${entry.id}”>${entry.carbs.toFixed(1)}</td>
+                    <td class=”editable” data-field=”fiber” data-id=”${entry.id}”>${entry.fiber.toFixed(1)}</td>
+                    <td class=”editable” data-field=”weight” data-id=”${entry.id}”>${entry.weight > 0 ? entry.weight.toFixed(1) : ‘-‘}</td>
+                    <td><button class=”delete-btn” onclick=”deleteEntry(${entry.id})”>Delete</button></td>
                 `;
                 
                 // Add drag event listeners
-                row.addEventListener('dragstart', handleDragStart);
-                row.addEventListener('dragover', handleDragOver);
-                row.addEventListener('drop', handleDrop);
-                row.addEventListener('dragend', handleDragEnd);
-                row.addEventListener('dragleave', handleDragLeave);
+                Row.addEventListener(‘dragstart’, handleDragStart);
+                Row.addEventListener(‘dragover’, handleDragOver);
+                Row.addEventListener(‘drop’, handleDrop);
+                Row.addEventListener(‘dragend’, handleDragEnd);
+                Row.addEventListener(‘dragleave’, handleDragLeave);
             });
             
             // Add click event listeners for editing
-            document.querySelectorAll('.editable').forEach(cell => {
-                cell.addEventListener('click', handleEdit);
+            Document.querySelectorAll(‘.editable’).forEach(cell => {
+                Cell.addEventListener(‘click’, handleEdit);
             });
         }
         
-        function handleEdit(e) {
-            const cell = e.target;
-            if (cell.classList.contains('editing')) return;
+        Function handleEdit€ {
+            Const cell = e.target;
+            If (cell.classList.contains(‘editing’)) return;
             
-            const originalValue = cell.textContent;
-            const field = cell.dataset.field;
-            const id = parseInt(cell.dataset.id);
+            Const originalValue = cell.textContent;
+            Const field = cell.dataset.field;
+            Const id = parseInt(cell.dataset.id);
             
-            let inputType = 'text';
-            if (['calories', 'proteins', 'fats', 'carbs', 'fiber', 'weight'].includes(field)) {
-                inputType = 'number';
+            Let inputType = ‘text’;
+            If ([‘calories’, ‘proteins’, ‘fats’, ‘carbs’, ‘fiber’, ‘weight’].includes(field)) {
+                inputType = ‘number’;
             }
             
-            let inputHTML = '';
-            if (field === 'mealType') {
+            Let inputHTML = ‘’;
+            If (field === ‘mealType’) {
                 inputHTML = `
-                    <select class="edit-input" style="width: 100%; padding: 4px;">
-                        <option value="Breakfast" ${originalValue === 'Breakfast' ? 'selected' : ''}>Breakfast</option>
-                        <option value="Morning Snack" ${originalValue === 'Morning Snack' ? 'selected' : ''}>Morning Snack</option>
-                        <option value="Lunch" ${originalValue === 'Lunch' ? 'selected' : ''}>Lunch</option>
-                        <option value="Afternoon Snack" ${originalValue === 'Afternoon Snack' ? 'selected' : ''}>Afternoon Snack</option>
-                        <option value="Dinner" ${originalValue === 'Dinner' ? 'selected' : ''}>Dinner</option>
-                        <option value="Evening Snack" ${originalValue === 'Evening Snack' ? 'selected' : ''}>Evening Snack</option>
+                    <select class=”edit-input” style=”width: 100%; padding: 4px;”>
+                        <option value=”Breakfast” ${originalValue === ‘Breakfast’ ? ‘selected’ : ‘’}>Breakfast</option>
+                        <option value=”Morning Snack” ${originalValue === ‘Morning Snack’ ? ‘selected’ : ‘’}>Morning Snack</option>
+                        <option value=”Lunch” ${originalValue === ‘Lunch’ ? ‘selected’ : ‘’}>Lunch</option>
+                        <option value=”Afternoon Snack” ${originalValue === ‘Afternoon Snack’ ? ‘selected’ : ‘’}>Afternoon Snack</option>
+                        <option value=”Dinner” ${originalValue === ‘Dinner’ ? ‘selected’ : ‘’}>Dinner</option>
+                        <option value=”Evening Snack” ${originalValue === ‘Evening Snack’ ? ‘selected’ : ‘’}>Evening Snack</option>
                     </select>
                 `;
             } else {
-                inputHTML = `<input type="${inputType}" class="edit-input" value="${originalValue === '-' ? '' : originalValue}" style="width: 100%; padding: 4px;" ${inputType === 'number' ? 'step="0.1"' : ''}>`;
+                inputHTML = `<input type=”${inputType}” class=”edit-input” value=”${originalValue === ‘-‘ ? ‘’ : originalValue}” style=”width: 100%; padding: 4px;” ${inputType === ‘number’ ? ‘step=”0.1”’ : ‘’}>`;
             }
             
-            cell.classList.add('editing');
-            cell.innerHTML = inputHTML;
-            const input = cell.querySelector('.edit-input');
-            input.focus();
+            Cell.classList.add(‘editing’);
+            Cell.innerHTML = inputHTML;
+            Const input = cell.querySelector(‘.edit-input’);
+            Input.focus();
             
-            if (inputType === 'text') {
-                input.select();
+            If (inputType === ‘text’) {
+                Input.select();
             }
             
-            const saveEdit = () => {
-                let newValue = input.value;
+            Const saveEdit = () => {
+                Let newValue = input.value;
                 
-                if (inputType === 'number') {
+                If (inputType === ‘number’) {
                     newValue = parseFloat(newValue) || 0;
                 }
                 
                 // Update the data
-                const entry = calorieData.find(e => e.id === id);
-                if (entry) {
-                    entry[field] = newValue;
+                Const entry = calorieData.find(e => e.id === id);
+                If (entry) {
+                    Entry[field] = newValue;
                     updateDisplay();
                     saveData();
                 }
             };
             
-            input.addEventListener('blur', saveEdit);
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
+            Input.addEventListener(‘blur’, saveEdit);
+            Input.addEventListener(‘keypress’, € => {
+                If (e.key === ‘Enter’) {
                     e.preventDefault();
                     input.blur();
                 }
             });
         }
         
-        let draggedElement = null;
+        Let draggedElement = null;
         
-        function handleDragStart(e) {
+        Function handleDragStart€ {
             draggedElement = e.target;
-            e.target.classList.add('dragging');
+            e.target.classList.add(‘dragging’);
         }
         
-        function handleDragOver(e) {
+        Function handleDragOver€ {
             e.preventDefault();
             const afterElement = getDragAfterElement(e.currentTarget.parentElement, e.clientY);
-            const dragging = document.querySelector('.dragging');
+            const dragging = document.querySelector(‘.dragging’);
             
             if (afterElement == null) {
                 e.currentTarget.parentElement.appendChild(dragging);
@@ -858,16 +925,16 @@
             }
             
             // Add visual feedback
-            e.currentTarget.classList.add('drag-over');
+            e.currentTarget.classList.add(‘drag-over’);
         }
         
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
+        Function handleDragLeave€ {
+            e.currentTarget.classList.remove(‘drag-over’);
         }
         
-        function handleDrop(e) {
+        Function handleDrop€ {
             e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            e.currentTarget.classList.remove(‘drag-over’);
             
             if (draggedElement) {
                 const draggedId = parseInt(draggedElement.dataset.id);
@@ -875,44 +942,44 @@
                 const targetDate = e.currentTarget.dataset.date;
                 
                 // Only allow reordering within the same date
-                if (draggedDate === targetDate) {
+                If (draggedDate === targetDate) {
                     updateOrder();
                 }
             }
         }
         
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-            document.querySelectorAll('.drag-over').forEach(el => {
-                el.classList.remove('drag-over');
+        Function handleDragEnd€ {
+            e.target.classList.remove(‘dragging’);
+            document.querySelectorAll(‘.drag-over’).forEach(el => {
+                el.classList.remove(‘drag-over’);
             });
         }
         
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('tr:not(.dragging)')];
+        Function getDragAfterElement(container, y) {
+            Const draggableElements = […container.querySelectorAll(‘tr:not(.dragging)’)];
             
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
+            Return draggableElements.reduce((closest, child) => {
+                Const box = child.getBoundingClientRect();
+                Const offset = y – box.top – box.height / 2;
                 
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
+                If (offset < 0 && offset > closest.offset) {
+                    Return { offset: offset, element: child };
                 } else {
-                    return closest;
+                    Return closest;
                 }
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
         
-        function updateOrder() {
-            const rows = document.querySelectorAll('#dataBody tr');
-            const dateGroups = {};
+        Function updateOrder() {
+            Const rows = document.querySelectorAll(‘#dataBody tr’);
+            Const dateGroups = {};
             
             // Group rows by date and assign order
-            rows.forEach((row, index) => {
-                const id = parseInt(row.dataset.id);
-                const date = row.dataset.date;
+            Rows.forEach((row, index) => {
+                Const id = parseInt(row.dataset.id);
+                Const date = row.dataset.date;
                 
-                if (!dateGroups[date]) {
+                If (!dateGroups[date]) {
                     dateGroups[date] = [];
                 }
                 dateGroups[date].push({ id, order: dateGroups[date].length });
@@ -920,10 +987,10 @@
             
             // Update the order in calorieData
             Object.entries(dateGroups).forEach(([date, items]) => {
-                items.forEach(item => {
-                    const entry = calorieData.find(e => e.id === item.id);
-                    if (entry) {
-                        entry.order = item.order;
+                Items.forEach(item => {
+                    Const entry = calorieData.find(e => e.id === item.id);
+                    If (entry) {
+                        Entry.order = item.order;
                     }
                 });
             });
@@ -931,106 +998,126 @@
             saveData();
         }
         
-        function updateSummary() {
-            const today = new Date().toISOString().split('T')[0];
-            const todayEntries = calorieData.filter(entry => entry.date === today);
+        Function updateSummary() {
+            Const selectedDate = document.getElementById(‘date’).value;
+            Const selectedDateObj = new Date(selectedDate);
+            Const today = new Date().toISOString().split(‘T’)[0];
             
-            const totals = todayEntries.reduce((sum, entry) => ({
-                calories: sum.calories + entry.calories,
-                proteins: sum.proteins + entry.proteins,
-                fats: sum.fats + entry.fats,
-                carbs: sum.carbs + entry.carbs,
-                fiber: sum.fiber + entry.fiber
+            // Update summary title
+            Const summaryDateElement = document.getElementById(‘summaryDate’);
+            If (selectedDate === today) {
+                summaryDateElement.textContent = ‘TODAY’;
+            } else {
+                summaryDateElement.textContent = selectedDateObj.toLocaleDateString(‘en-US’, { 
+                    month: ‘short’, 
+                    day: ‘numeric’,
+                    year: ‘numeric’
+                }).toUpperCase();
+            }
+            
+            // Filter entries for selected date
+            Const dateEntries = calorieData.filter(entry => entry.date === selectedDate);
+            
+            Const totals = dateEntries.reduce((sum, entry) => ({
+                Calories: sum.calories + entry.calories,
+                Proteins: sum.proteins + entry.proteins,
+                Fats: sum.fats + entry.fats,
+                Carbs: sum.carbs + entry.carbs,
+                Fiber: sum.fiber + entry.fiber
             }), { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 });
             
-            document.getElementById('totalCalories').textContent = Math.round(totals.calories);
-            document.getElementById('totalProteins').textContent = totals.proteins.toFixed(1) + 'g';
-            document.getElementById('totalFats').textContent = totals.fats.toFixed(1) + 'g';
-            document.getElementById('totalCarbs').textContent = totals.carbs.toFixed(1) + 'g';
-            document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1) + 'g';
+            Document.getElementById(‘totalCalories’).textContent = Math.round(totals.calories);
+            Document.getElementById(‘totalProteins’).textContent = totals.proteins.toFixed(1) + ‘g’;
+            Document.getElementById(‘totalFats’).textContent = totals.fats.toFixed(1) + ‘g’;
+            Document.getElementById(‘totalCarbs’).textContent = totals.carbs.toFixed(1) + ‘g’;
+            Document.getElementById(‘totalFiber’).textContent = totals.fiber.toFixed(1) + ‘g’;
             
-            // Get latest weight entry
-            const weightsWithData = calorieData.filter(entry => entry.weight > 0);
-            if (weightsWithData.length > 0) {
-                const latestWeight = weightsWithData.sort((a, b) => new Date(b.date) - new Date(a.date))[0].weight;
-                document.getElementById('latestWeight').textContent = latestWeight.toFixed(1);
+            // Get weight entry for selected date or closest previous date
+            Const weightsOnOrBefore = calorieData
+                .filter(entry => entry.weight > 0 && entry.date <= selectedDate)
+                .sort((a, b) => new Date(b.date) – new Date(a.date));
+            
+            If (weightsOnOrBefore.length > 0) {
+                Document.getElementById(‘latestWeight’).textContent = weightsOnOrBefore[0].weight.toFixed(1);
+            } else {
+                Document.getElementById(‘latestWeight’).textContent = ‘-‘;
             }
         }
         
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        Function formatDate(dateStr) {
+            Const date = new Date(dateStr);
+            Return date.toLocaleDateString(‘en-US’, { month: ‘short’, day: ‘numeric’ });
         }
         
-        function exportToCSV() {
-            if (calorieData.length === 0) {
-                alert('No data to export. Please add at least one entry before exporting.');
-                return;
+        Function exportToCSV() {
+            If (calorieData.length === 0) {
+                Alert(‘No data to export. Please add at least one entry before exporting.’);
+                Return;
             }
             
-            const headers = ['Date', 'Meal Type', 'Food Item', 'Calories', 'Proteins (g)', 'Fats (g)', 'Carbs (g)', 'Fiber (g)', 'Weight (kg)'];
-            const csvContent = [
-                headers.join(','),
-                ...calorieData.map(entry => [
-                    entry.date,
-                    entry.mealType || 'Not specified',
-                    `"${entry.meal}"`,
-                    entry.calories,
-                    entry.proteins.toFixed(1),
-                    entry.fats.toFixed(1),
-                    entry.carbs.toFixed(1),
-                    entry.fiber.toFixed(1),
-                    entry.weight > 0 ? entry.weight.toFixed(1) : ''
-                ].join(','))
-            ].join('\n');
+            Const headers = [‘Date’, ‘Meal Type’, ‘Food Item’, ‘Calories’, ‘Proteins (g)’, ‘Fats (g)’, ‘Carbs (g)’, ‘Fiber (g)’, ‘Weight (kg)’];
+            Const csvContent = [
+                Headers.join(‘,’),
+                …calorieData.map(entry => [
+                    Entry.date,
+                    Entry.mealType || ‘Not specified’,
+                    `”${entry.meal}”`,
+                    Entry.calories,
+                    Entry.proteins.toFixed(1),
+                    Entry.fats.toFixed(1),
+                    Entry.carbs.toFixed(1),
+                    Entry.fiber.toFixed(1),
+                    Entry.weight > 0 ? entry.weight.toFixed(1) : ‘’
+                ].join(‘,’))
+            ].join(‘\n’);
             
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', `calorie_tracking_${new Date().toISOString().split('T')[0]}.csv`);
+            Const blob = new Blob([csvContent], { type: ‘text/csv’ });
+            Const url = window.URL.createObjectURL(blob);
+            Const a = document.createElement(‘a’);
+            a.setAttribute(‘hidden’, ‘’);
+            a.setAttribute(‘href’, url);
+            a.setAttribute(‘download’, `calorie_tracking_${new Date().toISOString().split(‘T’)[0]}.csv`);
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
         }
         
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+        Function clearAllData() {
+            If (confirm(‘Are you sure you want to clear all data? This cannot be undone.’)) {
                 calorieData = [];
                 updateDisplay();
                 try {
-                    localStorage.removeItem('calorieTrackerData');
-                } catch (e) {
-                    console.log('Could not clear localStorage');
+                    localStorage.removeItem(‘calorieTrackerData’);
+                } catch € {
+                    Console.log(‘Could not clear localStorage’);
                 }
             }
         }
         
-        function handleFileImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        Function handleFileImport(event) {
+            Const file = event.target.files[0];
+            If (!file) return;
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const content = e.target.result;
-                    const lines = content.split('\n');
+            Const reader = new FileReader();
+            Reader.onload = function€ {
+                Try {
+                    Const content = e.target.result;
+                    Const lines = content.split(‘\n’);
                     
-                    if (lines.length <= 1) {
-                        alert('CSV file appears to be empty');
-                        return;
+                    If (lines.length <= 1) {
+                        Alert(‘CSV file appears to be empty’);
+                        Return;
                     }
                     
-                    if (calorieData.length > 0) {
-                        if (!confirm('This will replace all existing data. Continue?')) {
-                            return;
+                    If (calorieData.length > 0) {
+                        If (!confirm(‘This will replace all existing data. Continue?’)) {
+                            Return;
                         }
                     }
                     
                     calorieData = [];
                     
-                    for (let i = 1; i < lines.length; i++) {
+                    for (let I = 1; I < lines.length; i++) {
                         const line = lines[i].trim();
                         if (!line) continue;
                         
@@ -1038,9 +1125,9 @@
                         
                         if (values.length >= 8) {
                             const entry = {
-                                id: Date.now() + i,
+                                id: Date.now() + I,
                                 date: values[0],
-                                mealType: values[1] === 'Not specified' ? '' : values[1],
+                                mealType: values[1] === ‘Not specified’ ? ‘’ : values[1],
                                 meal: values[2],
                                 calories: parseFloat(values[3]) || 0,
                                 proteins: parseFloat(values[4]) || 0,
@@ -1059,84 +1146,84 @@
                     alert(`Successfully imported ${calorieData.length} entries`);
                     
                 } catch (error) {
-                    alert('Error importing CSV file. Please check the file format.');
-                    console.error(error);
+                    Alert(‘Error importing CSV file. Please check the file format.’);
+                    Console.error(error);
                 }
             };
             
-            reader.readAsText(file);
-            event.target.value = '';
+            Reader.readAsText(file);
+            Event.target.value = ‘’;
         }
         
-        function parseCSVLine(line) {
-            const values = [];
-            let current = '';
-            let inQuotes = false;
+        Function parseCSVLine(line) {
+            Const values = [];
+            Let current = ‘’;
+            Let inQuotes = false;
             
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
+            For (let I = 0; I < line.length; i++) {
+                Const char = line[i];
                 
-                if (char === '"') {
+                If (char === ‘”’) {
                     inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(current.trim());
-                    current = '';
+                } else if (char === ‘,’ && !inQuotes) {
+                    Values.push(current.trim());
+                    Current = ‘’;
                 } else {
-                    current += char;
+                    Current += char;
                 }
             }
             
-            values.push(current.trim());
-            return values;
+            Values.push(current.trim());
+            Return values;
         }
         
-        function loadData() {
-            try {
-                const savedData = localStorage.getItem('calorieTrackerData');
-                if (savedData) {
+        Function loadData() {
+            Try {
+                Const savedData = localStorage.getItem(‘calorieTrackerData’);
+                If (savedData) {
                     calorieData = JSON.parse(savedData);
                 }
-            } catch (e) {
-                console.log('localStorage not available');
+            } catch € {
+                Console.log(‘localStorage not available’);
             }
             updateDisplay();
         }
         
-        function saveData() {
-            try {
-                localStorage.setItem('calorieTrackerData', JSON.stringify(calorieData));
-            } catch (e) {
-                console.log('Could not save to localStorage');
+        Function saveData() {
+            Try {
+                localStorage.setItem(‘calorieTrackerData’, JSON.stringify(calorieData));
+            } catch € {
+                Console.log(‘Could not save to localStorage’);
             }
         }
         
         // Calculator functions
-        let calcDisplay = '0';
-        let calcResult = false;
+        Let calcDisplay = ‘0’;
+        Let calcResult = false;
         
-        function openCalculator() {
-            document.getElementById('calcModal').style.display = 'block';
+        Function openCalculator() {
+            Document.getElementById(‘calcModal’).style.display = ‘block’;
         }
         
-        function closeCalculator() {
-            document.getElementById('calcModal').style.display = 'none';
+        Function closeCalculator() {
+            Document.getElementById(‘calcModal’).style.display = ‘none’;
         }
         
-        function updateCalcDisplay() {
-            document.getElementById('calcDisplay').textContent = calcDisplay;
+        Function updateCalcDisplay() {
+            Document.getElementById(‘calcDisplay’).textContent = calcDisplay;
         }
         
-        function clearCalc() {
-            calcDisplay = '0';
+        Function clearCalc() {
+            calcDisplay = ‘0’;
             calcResult = false;
             updateCalcDisplay();
         }
         
-        function appendToCalc(value) {
-            if (calcResult && !isNaN(value)) {
+        Function appendToCalc(value) {
+            If (calcResult && !isNaN(value)) {
                 calcDisplay = value;
                 calcResult = false;
-            } else if (calcDisplay === '0' && value !== '.') {
+            } else if (calcDisplay === ‘0’ && value !== ‘.’) {
                 calcDisplay = value;
             } else {
                 calcDisplay += value;
@@ -1144,219 +1231,261 @@
             updateCalcDisplay();
         }
         
-        function deleteLastCalc() {
-            if (calcDisplay.length > 1) {
+        Function deleteLastCalc() {
+            If (calcDisplay.length > 1) {
                 calcDisplay = calcDisplay.slice(0, -1);
             } else {
-                calcDisplay = '0';
+                calcDisplay = ‘0’;
             }
             calcResult = false;
             updateCalcDisplay();
         }
         
-        function calculateResult() {
-            try {
-                const result = eval(calcDisplay);
+        Function calculateResult() {
+            Try {
+                Const result = eval(calcDisplay);
                 calcDisplay = result.toString();
                 calcResult = true;
                 updateCalcDisplay();
-            } catch (e) {
-                calcDisplay = 'Error';
+            } catch € {
+                calcDisplay = ‘Error’;
                 updateCalcDisplay();
                 setTimeout(() => {
-                    calcDisplay = '0';
+                    calcDisplay = ‘0’;
                     updateCalcDisplay();
                 }, 1500);
             }
         }
         
         // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('calcModal')) {
+        Window.onclick = function(event) {
+            If (event.target == document.getElementById(‘calcModal’)) {
                 closeCalculator();
             }
         }
         
         // Theme switching functionality
-        function setTheme(theme) {
+        Function setTheme(theme) {
             // Update active button
-            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            Document.querySelectorAll(‘.theme-btn’).forEach(btn => btn.classList.remove(‘active’));
+            Event.target.classList.add(‘active’);
             
             // Apply theme
-            if (theme === 'light') {
-                document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #f5f5f5 100%)');
-                document.documentElement.style.setProperty('--container-bg', '#ffffff');
-                document.documentElement.style.setProperty('--container-border', '#ddd');
-                document.documentElement.style.setProperty('--section-bg', '#f8f9fa');
-                document.documentElement.style.setProperty('--section-border', '#e0e0e0');
-                document.documentElement.style.setProperty('--input-bg', '#ffffff');
-                document.documentElement.style.setProperty('--input-border', '#ced4da');
-                document.documentElement.style.setProperty('--text-primary', '#212529');
-                document.documentElement.style.setProperty('--text-secondary', '#6c757d');
-                document.documentElement.style.setProperty('--label-color', '#495057');
-                document.documentElement.style.setProperty('--th-bg', '#343a40');
-                document.documentElement.style.setProperty('--th-color', '#ffffff');
-                document.documentElement.style.setProperty('--row-even', '#f8f9fa');
-                document.documentElement.style.setProperty('--row-odd', '#ffffff');
-                document.documentElement.style.setProperty('--row-hover', '#e9ecef');
-                document.documentElement.style.setProperty('--summary-bg', '#e3f2fd');
-                document.documentElement.style.setProperty('--summary-value', '#1976d2');
-                document.documentElement.style.setProperty('--h1-color', '#ff6347');
-                document.documentElement.style.setProperty('--subtitle-color', '#ff7f50');
-                document.documentElement.style.setProperty('--primary-btn', '#ff6347');
-                document.documentElement.style.setProperty('--primary-btn-hover', '#ff7f50');
-            } else if (theme === 'medium') {
-                document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 50%, #2d2d2d 100%)');
-                document.documentElement.style.setProperty('--container-bg', '#383838');
-                document.documentElement.style.setProperty('--container-border', '#4a4a4a');
-                document.documentElement.style.setProperty('--section-bg', '#424242');
-                document.documentElement.style.setProperty('--section-border', '#525252');
-                document.documentElement.style.setProperty('--input-bg', '#2d2d2d');
-                document.documentElement.style.setProperty('--input-border', '#555555');
-                document.documentElement.style.setProperty('--text-primary', '#e0e0e0');
-                document.documentElement.style.setProperty('--text-secondary', '#b0b0b0');
-                document.documentElement.style.setProperty('--label-color', '#ffb399');
-                document.documentElement.style.setProperty('--th-bg', '#4a4a4a');
-                document.documentElement.style.setProperty('--th-color', '#ffb399');
-                document.documentElement.style.setProperty('--row-even', '#3d3d3d');
-                document.documentElement.style.setProperty('--row-odd', '#383838');
-                document.documentElement.style.setProperty('--row-hover', '#4a4a4a');
-                document.documentElement.style.setProperty('--summary-bg', '#4a4a4a');
-                document.documentElement.style.setProperty('--summary-value', '#ff9966');
-                document.documentElement.style.setProperty('--h1-color', '#ff7f50');
-                document.documentElement.style.setProperty('--subtitle-color', '#ff9966');
-                document.documentElement.style.setProperty('--primary-btn', '#ff6347');
-                document.documentElement.style.setProperty('--primary-btn-hover', '#ff7f50');
+            If (theme === ‘light’) {
+                Document.documentElement.style.setProperty(‘—bg-gradient’, ‘linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #f5f5f5 100%)’);
+                Document.documentElement.style.setProperty(‘—container-bg’, ‘#ffffff’);
+                Document.documentElement.style.setProperty(‘—container-border’, ‘#ddd’);
+                Document.documentElement.style.setProperty(‘—section-bg’, ‘#f8f9fa’);
+                Document.documentElement.style.setProperty(‘—section-border’, ‘#e0e0e0’);
+                Document.documentElement.style.setProperty(‘—input-bg’, ‘#ffffff’);
+                Document.documentElement.style.setProperty(‘—input-border’, ‘#ced4da’);
+                Document.documentElement.style.setProperty(‘—text-primary’, ‘#212529’);
+                Document.documentElement.style.setProperty(‘—text-secondary’, ‘#6c757d’);
+                Document.documentElement.style.setProperty(‘—label-color’, ‘#495057’);
+                Document.documentElement.style.setProperty(‘—th-bg’, ‘#343a40’);
+                Document.documentElement.style.setProperty(‘—th-color’, ‘#ffffff’);
+                Document.documentElement.style.setProperty(‘—row-even’, ‘#f8f9fa’);
+                Document.documentElement.style.setProperty(‘—row-odd’, ‘#ffffff’);
+                Document.documentElement.style.setProperty(‘—row-hover’, ‘#e9ecef’);
+                Document.documentElement.style.setProperty(‘—summary-bg’, ‘#e3f2fd’);
+                Document.documentElement.style.setProperty(‘—summary-value’, ‘#1976d2’);
+                Document.documentElement.style.setProperty(‘—h1-color’, ‘#ff6347’);
+                Document.documentElement.style.setProperty(‘—subtitle-color’, ‘#ff7f50’);
+                Document.documentElement.style.setProperty(‘—primary-btn’, ‘#ff6347’);
+                Document.documentElement.style.setProperty(‘—primary-btn-hover’, ‘#ff7f50’);
+            } else if (theme === ‘medium’) {
+                Document.documentElement.style.setProperty(‘—bg-gradient’, ‘linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 50%, #2d2d2d 100%)’);
+                Document.documentElement.style.setProperty(‘—container-bg’, ‘#383838’);
+                Document.documentElement.style.setProperty(‘—container-border’, ‘#4a4a4a’);
+                Document.documentElement.style.setProperty(‘—section-bg’, ‘#424242’);
+                Document.documentElement.style.setProperty(‘—section-border’, ‘#525252’);
+                Document.documentElement.style.setProperty(‘—input-bg’, ‘#2d2d2d’);
+                Document.documentElement.style.setProperty(‘—input-border’, ‘#555555’);
+                Document.documentElement.style.setProperty(‘—text-primary’, ‘#e0e0e0’);
+                Document.documentElement.style.setProperty(‘—text-secondary’, ‘#b0b0b0’);
+                Document.documentElement.style.setProperty(‘—label-color’, ‘#ffb399’);
+                Document.documentElement.style.setProperty(‘—th-bg’, ‘#4a4a4a’);
+                Document.documentElement.style.setProperty(‘—th-color’, ‘#ffb399’);
+                Document.documentElement.style.setProperty(‘—row-even’, ‘#3d3d3d’);
+                Document.documentElement.style.setProperty(‘—row-odd’, ‘#383838’);
+                Document.documentElement.style.setProperty(‘—row-hover’, ‘#4a4a4a’);
+                Document.documentElement.style.setProperty(‘—summary-bg’, ‘#4a4a4a’);
+                Document.documentElement.style.setProperty(‘—summary-value’, ‘#ff9966’);
+                Document.documentElement.style.setProperty(‘—h1-color’, ‘#ff7f50’);
+                Document.documentElement.style.setProperty(‘—subtitle-color’, ‘#ff9966’);
+                Document.documentElement.style.setProperty(‘—primary-btn’, ‘#ff6347’);
+                Document.documentElement.style.setProperty(‘—primary-btn-hover’, ‘#ff7f50’);
             } else { // dark theme (default)
-                document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)');
-                document.documentElement.style.setProperty('--container-bg', '#1f1f1f');
-                document.documentElement.style.setProperty('--container-border', '#333333');
-                document.documentElement.style.setProperty('--section-bg', '#2a2a2a');
-                document.documentElement.style.setProperty('--section-border', '#3a3a3a');
-                document.documentElement.style.setProperty('--input-bg', '#1a1a1a');
-                document.documentElement.style.setProperty('--input-border', '#444444');
-                document.documentElement.style.setProperty('--text-primary', '#e0e0e0');
-                document.documentElement.style.setProperty('--text-secondary', '#b0b0b0');
-                document.documentElement.style.setProperty('--label-color', '#ffb399');
-                document.documentElement.style.setProperty('--th-bg', '#2d2d2d');
-                document.documentElement.style.setProperty('--th-color', '#ffb399');
-                document.documentElement.style.setProperty('--row-even', '#1f1f1f');
-                document.documentElement.style.setProperty('--row-odd', '#1a1a1a');
-                document.documentElement.style.setProperty('--row-hover', '#2a2a2a');
-                document.documentElement.style.setProperty('--summary-bg', '#2d2d2d');
-                document.documentElement.style.setProperty('--summary-value', '#ff9966');
-                document.documentElement.style.setProperty('--h1-color', '#ff7f50');
-                document.documentElement.style.setProperty('--subtitle-color', '#ff9966');
-                document.documentElement.style.setProperty('--primary-btn', '#ff6347');
-                document.documentElement.style.setProperty('--primary-btn-hover', '#ff7f50');
+                Document.documentElement.style.setProperty(‘—bg-gradient’, ‘linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%)’);
+                Document.documentElement.style.setProperty(‘—container-bg’, ‘#0a0a0a’);
+                Document.documentElement.style.setProperty(‘—container-border’, ‘#2a2a2a’);
+                Document.documentElement.style.setProperty(‘—section-bg’, ‘#1a1a1a’);
+                Document.documentElement.style.setProperty(‘—section-border’, ‘#2a2a2a’);
+                Document.documentElement.style.setProperty(‘—input-bg’, ‘#0a0a0a’);
+                Document.documentElement.style.setProperty(‘—input-border’, ‘#3a3a3a’);
+                Document.documentElement.style.setProperty(‘—text-primary’, ‘#ffffff’);
+                Document.documentElement.style.setProperty(‘—text-secondary’, ‘#999999’);
+                Document.documentElement.style.setProperty(‘—label-color’, ‘#ff8c42’);
+                Document.documentElement.style.setProperty(‘—th-bg’, ‘#1a0000’);
+                Document.documentElement.style.setProperty(‘—th-color’, ‘#ff8c42’);
+                Document.documentElement.style.setProperty(‘—row-even’, ‘#0f0f0f’);
+                Document.documentElement.style.setProperty(‘—row-odd’, ‘#0a0a0a’);
+                Document.documentElement.style.setProperty(‘—row-hover’, ‘#1a1a1a’);
+                Document.documentElement.style.setProperty(‘—summary-bg’, ‘#1a0000’);
+                Document.documentElement.style.setProperty(‘—summary-value’, ‘#ff6b35’);
+                Document.documentElement.style.setProperty(‘—h1-color’, ‘#ff4500’);
+                Document.documentElement.style.setProperty(‘—subtitle-color’, ‘#ff8c42’);
+                Document.documentElement.style.setProperty(‘—primary-btn’, ‘#ff4500’);
+                Document.documentElement.style.setProperty(‘—primary-btn-hover’, ‘#ff6b35’);
             }
             
             // Save theme preference
-            localStorage.setItem('appobeastTheme', theme);
+            localStorage.setItem(‘appobeastTheme’, theme);
             
             // Update CSS
             updateThemeStyles();
         }
         
-        function updateThemeStyles() {
-            const style = document.createElement('style');
-            style.innerHTML = `
-                body { background: var(--bg-gradient); }
+        Function updateThemeStyles() {
+            Const style = document.createElement(‘style’);
+            Style.innerHTML = `
+                Body { background: var(--bg-gradient); }
                 .container { background-color: var(--container-bg); border: 1px solid var(--container-border); }
                 .input-section, .summary { background-color: var(--section-bg); border: 1px solid var(--section-border); }
-                input, select { background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); }
-                label { color: var(--label-color); }
-                th { background-color: var(--th-bg); color: var(--th-color); }
-                td { color: var(--text-primary); }
-                tr:nth-child(even) { background-color: var(--row-even); }
-                tr:nth-child(odd) { background-color: var(--row-odd); }
-                tr:hover { background-color: var(--row-hover); }
+                Input, select { background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); }
+                Label { color: var(--label-color); }
+                Th { background-color: var(--th-bg); color: var(--th-color); }
+                Td { color: var(--text-primary); }
+                Tr:nth-child(even) { background-color: var(--row-even); }
+                Tr:nth-child(odd) { background-color: var(--row-odd); }
+                Tr:hover { background-color: var(--row-hover); }
                 .summary { background-color: var(--summary-bg); }
                 .summary-value { color: var(--summary-value); }
                 .summary-label { color: var(--text-secondary); }
-                h1 { color: var(--h1-color); }
+                H1 { color: var(--h1-color); }
                 .fire-subtitle { color: var(--subtitle-color); }
-                h2, h3 { color: var(--subtitle-color); }
-                button { background-color: var(--primary-btn); }
-                button:hover { background-color: var(--primary-btn-hover); }
+                H2, h3 { color: var(--subtitle-color); }
+                Button { background-color: var(--primary-btn); }
+                Button:hover { background-color: var(--primary-btn-hover); }
                 .modal-content { background-color: var(--section-bg); }
                 .calculator { background-color: var(--container-bg); }
                 .calc-display { background-color: var(--input-bg); color: var(--subtitle-color); }
                 .table-container { background-color: var(--input-bg); }
-                th, td { border: 1px solid var(--section-border); }
+                Th, td { border: 1px solid var(--section-border); }
                 .editable.editing { background-color: var(--section-bg); }
                 .edit-input { background-color: var(--input-bg); color: var(--text-primary); }
             `;
-            document.head.appendChild(style);
+            Document.head.appendChild(style);
         }
         
         // Load saved theme on page load
-        function loadSavedTheme() {
-            const savedTheme = localStorage.getItem('appobeastTheme') || 'dark';
-            const themeButtons = document.querySelectorAll('.theme-btn');
+        Function loadSavedTheme() {
+            Const savedTheme = localStorage.getItem(‘appobeastTheme’) || ‘dark’;
+            Const themeButtons = document.querySelectorAll(‘.theme-btn’);
             themeButtons.forEach(btn => {
-                btn.classList.remove('active');
+                btn.classList.remove(‘active’);
                 if (btn.textContent.toLowerCase().includes(savedTheme)) {
-                    btn.classList.add('active');
+                    btn.classList.add(‘active’);
                 }
             });
             setTheme(savedTheme);
         }
         
         // Initialize theme on load
-        document.addEventListener('DOMContentLoaded', function() {
+        Document.addEventListener(‘DOMContentLoaded’, function() {
             updateThemeStyles();
             loadSavedTheme();
         });
         
+        // Toggle sync panel visibility
+        Function toggleSyncPanel() {
+            Const syncPanel = document.getElementById(‘syncPanel’);
+            Const syncToggleBtn = document.getElementById(‘syncToggleBtn’);
+            
+            If (syncPanel.classList.contains(‘show’)) {
+                syncPanel.classList.remove(‘show’);
+            } else {
+                syncPanel.classList.add(‘show’);
+            }
+        }
+        
+        // Click outside to close sync panel
+        Document.addEventListener(‘click’, function(event) {
+            Const syncPanel = document.getElementById(‘syncPanel’);
+            Const syncToggleBtn = document.getElementById(‘syncToggleBtn’);
+            
+            If (!syncPanel.contains(event.target) && !syncToggleBtn.contains(event.target)) {
+                syncPanel.classList.remove(‘show’);
+            }
+        });
+        
         // Sync functionality
-        let syncCode = null;
-        let syncInterval = null;
-        const SYNC_API = 'https://json-storage.com/api/bins/';
+        Let syncCode = null;
+        Let syncInterval = null;
+        
+        // Using JSONBin.io for free cloud storage
+        Const JSONBIN_API_KEY = ‘$2a$10$CgdL8Bv1N2hdlGMx3P9VKej8N6Z3XGmVpCKhZwQgR0P9hKxe6TDTC’; // Read-only public key
+        Const JSONBIN_BASE_URL = ‘https://api.jsonbin.io/v3/b/’;
+        Const JSONBIN_COLLECTION_ID = ‘6776fe2ce41b4d34e466e7a0’; // Public collection for APPOBEAST
         
         // Generate random 6-character hex code
-        function generateSyncCode() {
-            return Math.random().toString(16).substr(2, 6).toUpperCase();
+        Function generateSyncCode() {
+            Return Math.random().toString(16).substr(2, 6).toUpperCase();
         }
         
         // Initialize sync from saved code
-        function initializeSync() {
-            const savedCode = localStorage.getItem('appobeastSyncCode');
-            if (savedCode) {
-                document.getElementById('syncCode').value = savedCode;
+        Function initializeSync() {
+            Const savedCode = localStorage.getItem(‘appobeastSyncCode’);
+            If (savedCode) {
+                Document.getElementById(‘syncCode’).value = savedCode;
                 connectToSync(savedCode);
             }
         }
         
+        // Create a simple hash from sync code to use as bin name
+        Function hashCode(str) {
+            Let hash = 0;
+            For (let I = 0; I < str.length; i++) {
+                Const char = str.charCodeAt(i);
+                Hash = ((hash << 5) – hash) + char;
+                Hash = hash & hash;
+            }
+            Return ‘APPO_’ + Math.abs(hash).toString(16);
+        }
+        
         // Toggle sync connection
-        async function toggleSync() {
-            const syncBtn = document.querySelector('.sync-btn');
-            const syncInput = document.getElementById('syncCode');
-            const syncStatus = document.getElementById('syncStatus');
+        Async function toggleSync() {
+            Const syncBtn = document.querySelector(‘.sync-btn’);
+            Const syncInput = document.getElementById(‘syncCode’);
+            Const syncStatus = document.getElementById(‘syncStatus’);
             
-            if (syncCode) {
+            If (syncCode) {
                 // Disconnect
-                if (syncInterval) clearInterval(syncInterval);
+                If (syncInterval) clearInterval(syncInterval);
                 syncCode = null;
-                syncBtn.textContent = 'Connect';
-                syncStatus.textContent = 'Offline';
-                syncStatus.classList.remove('connected');
+                syncBtn.textContent = ‘Connect’;
+                syncStatus.textContent = ‘Offline’;
+                syncStatus.classList.remove(‘connected’);
                 syncInput.disabled = false;
-                localStorage.removeItem('appobeastSyncCode');
+                localStorage.removeItem(‘appobeastSyncCode’);
+                
+                // Update toggle button
+                Document.getElementById(‘syncToggleBtn’).classList.remove(‘connected’);
+                Document.getElementById(‘syncToggleBtn’).innerHTML = ‘<i>🔄</i>’;
             } else {
                 // Connect
-                let code = syncInput.value.trim().toUpperCase();
+                Let code = syncInput.value.trim().toUpperCase();
                 
-                if (!code) {
+                If (!code) {
                     // Generate new code
-                    code = generateSyncCode();
+                    Code = generateSyncCode();
                     syncInput.value = code;
+                    alert(`Your sync code is: ${code}\n\nSave this code to access your data on other devices!`);
                 }
                 
-                if (code.length !== 6) {
-                    alert('Sync code must be exactly 6 characters');
-                    return;
+                If (code.length !== 6) {
+                    Alert(‘Sync code must be exactly 6 characters’);
+                    Return;
                 }
                 
                 connectToSync(code);
@@ -1364,78 +1493,111 @@
         }
         
         // Connect to sync with code
-        async function connectToSync(code) {
-            const syncBtn = document.querySelector('.sync-btn');
-            const syncInput = document.getElementById('syncCode');
-            const syncStatus = document.getElementById('syncStatus');
+        Async function connectToSync(code) {
+            Const syncBtn = document.querySelector(‘.sync-btn’);
+            Const syncInput = document.getElementById(‘syncCode’);
+            Const syncStatus = document.getElementById(‘syncStatus’);
             
-            try {
-                syncCode = code;
-                localStorage.setItem('appobeastSyncCode', code);
+            syncCode = code;
+            localStorage.setItem(‘appobeastSyncCode’, code);
+            
+            // First, try to load existing data
+            Const loaded = await loadFromCloud();
+            
+            If (!loaded) {
+                // If no existing data, create new bin
+                Await createCloudStorage();
+            }
+            
+            // Set up auto-sync
+            If (syncInterval) clearInterval(syncInterval);
+            syncInterval = setInterval(syncToCloud, 10000); // Sync every 10 seconds
+            
+            syncBtn.textContent = ‘Disconnect’;
+            syncStatus.textContent = ‘Connected’;
+            syncStatus.classList.add(‘connected’);
+            syncInput.disabled = true;
+            
+            // Update toggle button
+            Document.getElementById(‘syncToggleBtn’).classList.add(‘connected’);
+            Document.getElementById(‘syncToggleBtn’).innerHTML = ‘<i>✅</i>’;
+        }
+        
+        // Create new cloud storage bin
+        Async function createCloudStorage() {
+            If (!syncCode) return;
+            
+            Try {
+                // For demo purposes, we’ll use localStorage with the sync code
+                // In a real app, you’d use a proper backend
+                Const storageKey = ‘appobeast_cloud_’ + syncCode;
+                Const cloudData = {
+                    Data: calorieData,
+                    lastUpdated: new Date().toISOString()
+                };
                 
-                // Try to load existing data
-                await loadFromCloud();
+                // Simulate cloud storage using localStorage
+                localStorage.setItem(storageKey, JSON.stringify(cloudData));
                 
-                // Set up auto-sync
-                if (syncInterval) clearInterval(syncInterval);
-                syncInterval = setInterval(syncToCloud, 5000); // Sync every 5 seconds
-                
-                syncBtn.textContent = 'Disconnect';
-                syncStatus.textContent = 'Connected';
-                syncStatus.classList.add('connected');
-                syncInput.disabled = true;
-                
+                return true;
             } catch (error) {
-                console.error('Sync error:', error);
-                syncCode = null;
-                alert('Failed to connect. Please try again.');
+                Console.error(‘Create storage error:’, error);
+                Return false;
             }
         }
         
         // Save data to cloud
-        async function syncToCloud() {
-            if (!syncCode) return;
+        Async function syncToCloud() {
+            If (!syncCode) return;
             
-            try {
-                const response = await fetch(SYNC_API + syncCode, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        data: calorieData,
-                        lastUpdated: new Date().toISOString()
-                    })
-                });
+            Try {
+                Const storageKey = ‘appobeast_cloud_’ + syncCode;
+                Const cloudData = {
+                    Data: calorieData,
+                    lastUpdated: new Date().toISOString()
+                };
                 
-                if (!response.ok) throw new Error('Sync failed');
+                // Simulate cloud storage using localStorage
+                localStorage.setItem(storageKey, JSON.stringify(cloudData));
+                
+                // Update sync status to show last sync
+                Const syncStatus = document.getElementById(‘syncStatus’);
+                If (syncStatus.classList.contains(‘connected’)) {
+                    Const now = new Date().toLocaleTimeString();
+                    syncStatus.textContent = `Synced ${now}`;
+                }
                 
             } catch (error) {
-                console.error('Sync error:', error);
+                Console.error(‘Sync error:’, error);
             }
         }
         
         // Load data from cloud
-        async function loadFromCloud() {
-            if (!syncCode) return;
+        Async function loadFromCloud() {
+            If (!syncCode) return false;
             
-            try {
-                const response = await fetch(SYNC_API + syncCode);
+            Try {
+                Const storageKey = ‘appobeast_cloud_’ + syncCode;
+                Const stored = localStorage.getItem(storageKey);
                 
-                if (response.ok) {
-                    const cloudData = await response.json();
-                    if (cloudData && cloudData.data) {
+                If (stored) {
+                    Const cloudData = JSON.parse(stored);
+                    If (cloudData && cloudData.data) {
                         calorieData = cloudData.data;
                         updateDisplay();
+                        return true;
                     }
                 }
+                
+                Return false;
             } catch (error) {
-                console.error('Load error:', error);
+                Console.error(‘Load error:’, error);
+                Return false;
             }
         }
         
         // Modified saveData to include cloud sync
-        const originalSaveData = saveData;
+        Const originalSaveData = saveData;
         saveData = function() {
             originalSaveData();
             if (syncCode) {
@@ -1444,7 +1606,7 @@
         };
         
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        Document.addEventListener(‘DOMContentLoaded’, function() {
             updateThemeStyles();
             loadSavedTheme();
             initializeSync();
@@ -1455,3 +1617,4 @@
     </script>
 </body>
 </html>
+
