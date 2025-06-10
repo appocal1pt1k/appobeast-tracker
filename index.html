@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Calorie Tracker</title>
-    <style id="themeStyles">
+    <title>APPOBEAST Calorie Tracker</title>
+    <style>
         /* CSS Variables for theming */
         :root {
             --bg-gradient: linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%);
@@ -30,7 +30,6 @@
             --primary-btn-hover: #ff6b35;
         }
         
-        /* Dark Theme (Default) */
         body {
             font-family: Arial, sans-serif;
             background: var(--bg-gradient);
@@ -40,6 +39,7 @@
             position: relative;
             overflow-x: hidden;
         }
+        
         body::before {
             content: '';
             position: fixed;
@@ -49,23 +49,24 @@
             bottom: 0;
             background: 
                 radial-gradient(circle at 20% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(255, 140, 0, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 50%);
             pointer-events: none;
             z-index: 1;
         }
+        
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background-color: var(--container-bg);
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(255, 69, 0, 0.3), inset 0 0 20px rgba(139, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(255, 69, 0, 0.3);
             box-sizing: border-box;
             border: 1px solid var(--container-border);
             position: relative;
             z-index: 2;
         }
+        
         .header-container {
             display: flex;
             align-items: center;
@@ -75,6 +76,7 @@
             flex-direction: column;
             position: relative;
         }
+        
         .header-controls {
             position: absolute;
             top: 0;
@@ -83,6 +85,7 @@
             gap: 10px;
             align-items: center;
         }
+        
         .sync-toggle-btn {
             background-color: #2a2a2a;
             border: 1px solid #3a3a3a;
@@ -93,14 +96,12 @@
             font-size: 18px;
             transition: all 0.3s;
         }
+        
         .sync-toggle-btn:hover {
             background-color: #3a3a3a;
             box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
         }
-        .sync-toggle-btn.connected {
-            color: #5cb85c;
-            border-color: #5cb85c;
-        }
+        
         .sync-container {
             display: none;
             gap: 5px;
@@ -115,39 +116,11 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             z-index: 100;
         }
+        
         .sync-container.show {
             display: flex;
         }
-        .sync-input {
-            background-color: #1a1a1a;
-            border: 1px solid #444444;
-            color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            width: 100px;
-            text-transform: uppercase;
-        }
-        .sync-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 12px;
-            cursor: pointer;
-            background-color: #5cb85c;
-            color: white;
-        }
-        .sync-btn:hover {
-            background-color: #6ec06e;
-        }
-        .sync-status {
-            font-size: 12px;
-            color: #999;
-            margin-left: 5px;
-        }
-        .sync-status.connected {
-            color: #5cb85c;
-        }
+        
         .theme-switcher {
             display: flex;
             gap: 5px;
@@ -156,6 +129,7 @@
             border-radius: 20px;
             border: 1px solid #3a3a3a;
         }
+        
         .theme-btn {
             padding: 8px 12px;
             border: none;
@@ -166,30 +140,23 @@
             background-color: transparent;
             color: #999;
         }
+        
         .theme-btn.active {
             background-color: #ff6347;
             color: white;
         }
-        .theme-btn:hover:not(.active) {
-            background-color: #3a3a3a;
-            color: #ff9966;
-        }
-        .logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
-        }
+        
         h1 {
             color: var(--h1-color);
             text-align: center;
             margin: 0;
             font-size: 42px;
-            text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
             font-weight: 900;
             letter-spacing: 3px;
             animation: fireGlow 2s ease-in-out infinite alternate;
         }
+        
         .fire-subtitle {
             color: var(--subtitle-color);
             font-size: 18px;
@@ -199,121 +166,77 @@
             margin-top: -10px;
             animation: pulse 3s ease-in-out infinite;
         }
+        
         @keyframes fireGlow {
-            from {
-                text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
-            }
-            to {
-                text-shadow: 0 0 30px rgba(255, 69, 0, 1), 0 0 60px rgba(255, 69, 0, 0.7), 0 0 80px rgba(255, 140, 0, 0.4);
-            }
+            from { text-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
+            to { text-shadow: 0 0 30px rgba(255, 69, 0, 1); }
         }
+        
         @keyframes pulse {
-            0%, 100% {
-                opacity: 0.8;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
-        h2, h3 {
-            color: #ff6b35;
-        }
+        
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
             gap: 30px;
             align-items: start;
         }
+        
         .left-panel {
             position: sticky;
             top: 20px;
         }
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+        
         .input-section {
-            background-color: var(--section-bg);
-            padding: 22px;
+            background: var(--section-bg);
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             position: relative;
-            background-image: linear-gradient(45deg, 
-                #ff0000 0%, 
-                #ff4500 25%, 
-                #ff8c00 50%, 
-                #ffd700 75%, 
-                #ffff00 100%);
-            background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
-            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-            background-repeat: no-repeat;
-            box-shadow: 
-                inset 2px 2px 0 0 rgba(255, 0, 0, 0.5),
-                inset -2px -2px 0 0 rgba(255, 255, 0, 0.5),
-                0 0 20px rgba(255, 69, 0, 0.3);
+            border: 2px solid transparent;
+            background-image: 
+                linear-gradient(var(--section-bg), var(--section-bg)),
+                linear-gradient(45deg, #ff0000, #ff4500, #ff8c00, #ffd700, #ffff00);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
         }
-        .input-section::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                #ff0000 0%, 
-                #ff4500 25%, 
-                #ff8c00 50%, 
-                #ffd700 75%, 
-                #ffff00 100%);
-            border-radius: 8px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite alternate;
-        }
-        @keyframes borderGlow {
-            from {
-                opacity: 0.6;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+        
         .input-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 20px;
         }
+        
         .input-group {
             display: flex;
             flex-direction: column;
         }
+        
         .input-group.full-width {
             grid-column: 1 / -1;
         }
+        
         label {
             font-weight: bold;
             margin-bottom: 5px;
-            color: #ff8c42;
+            color: var(--label-color);
             font-size: 14px;
         }
+        
         input[type="number"], input[type="date"], input[type="text"], select {
             padding: 8px;
-            border: 1px solid #3a3a3a;
+            border: 1px solid var(--input-border);
             border-radius: 4px;
             font-size: 14px;
             width: 100%;
             box-sizing: border-box;
-            background-color: #0a0a0a;
-            color: #ffffff;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
         }
-        input[type="number"]:focus, input[type="date"]:focus, input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: #ff4500;
-            box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
-        }
+        
         button {
             background-color: var(--primary-btn);
             color: white;
@@ -323,132 +246,108 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
+        
         button:hover {
             background-color: var(--primary-btn-hover);
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.7), 0 4px 8px rgba(0,0,0,0.3);
             transform: translateY(-2px);
         }
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-            background-color: #0a0a0a;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-        th, td {
-            border: 1px solid #2a2a2a;
-            padding: 10px;
-            text-align: left;
-            color: #ffffff;
-        }
-        th {
-            background-color: #1a0000;
-            color: #ff8c42;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-        }
-        tr:nth-child(even) {
-            background-color: #0f0f0f;
-        }
-        tr:nth-child(odd) {
-            background-color: #0a0a0a;
-        }
-        tr:hover {
-            background-color: #1a1a1a;
-        }
-        tr.dragging {
-            opacity: 0.5;
-        }
-        tr.drag-over {
-            border-top: 3px solid #ff4500;
-        }
-        .editable {
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-        }
-        .editable:hover {
-            background-color: rgba(255, 127, 80, 0.1);
-        }
-        .editable.editing {
-            background-color: #2a2a2a;
-            border: 1px solid #ff7f50;
-        }
-        .drag-handle {
-            cursor: move;
-            color: #888888;
-            padding: 0 8px;
-            font-size: 18px;
-        }
-        .drag-handle:hover {
-            color: #ff9966;
-        }
+        
         .summary {
-            background-color: #1a0000;
+            background-color: var(--summary-bg);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--section-border);
         }
+        
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
+        
         .summary-item {
             text-align: center;
         }
+        
         .summary-value {
             font-size: 24px;
             font-weight: bold;
-            color: #ff6b35;
-            text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+            color: var(--summary-value);
         }
+        
         .summary-label {
-            color: #999999;
+            color: var(--text-secondary);
             margin-top: 5px;
             font-size: 14px;
         }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th, td {
+            border: 1px solid var(--section-border);
+            padding: 10px;
+            text-align: left;
+            color: var(--text-primary);
+        }
+        
+        th {
+            background-color: var(--th-bg);
+            color: var(--th-color);
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--row-even);
+        }
+        
+        tr:nth-child(odd) {
+            background-color: var(--row-odd);
+        }
+        
+        tr:hover {
+            background-color: var(--row-hover);
+        }
+        
         .delete-btn {
             background-color: #8b0000;
             padding: 6px 12px;
             font-size: 14px;
         }
+        
         .delete-btn:hover {
             background-color: #b30000;
         }
-        .export-btn {
-            background-color: #2d5016;
-        }
-        .export-btn:hover {
-            background-color: #3a6b1d;
-        }
-        .calc-btn-main {
-            background-color: #663399;
-        }
-        .calc-btn-main:hover {
-            background-color: #7d40b8;
+        
+        .calendar-btn {
+            background: none;
+            border: none;
+            color: var(--subtitle-color);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s;
         }
         
-        /* Calculator Modal */
+        .calendar-btn:hover {
+            transform: scale(1.2);
+        }
+        
         .modal {
             display: none;
             position: fixed;
@@ -459,121 +358,44 @@
             height: 100%;
             background-color: rgba(0,0,0,0.8);
         }
+        
         .modal-content {
-            background-color: #1a1a1a;
+            background-color: var(--section-bg);
             margin: 15% auto;
             padding: 15px;
-            border: 1px solid #ff4500;
+            border: 1px solid var(--h1-color);
             border-radius: 10px;
             width: 90%;
             max-width: 300px;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
+        
         .close {
-            color: #ff4500;
+            color: var(--h1-color);
             float: right;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
         }
-        .close:hover {
-            color: #ff6b35;
-            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
-        }
-        .calculator {
-            background-color: #0a0a0a;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .calculator h3 {
-            margin-top: 5px;
-        }
-        .calc-display {
-            background-color: #000000;
-            padding: 10px;
-            border: 2px solid #3a3a3a;
-            border-radius: 4px;
-            font-size: 18px;
-            text-align: right;
-            margin-bottom: 10px;
-            min-height: 25px;
-            color: #ff8c42;
-        }
-        .calc-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-        }
-        .calc-btn {
-            padding: 15px;
-            font-size: 16px;
-            background-color: #2a2a2a;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .calc-btn:hover {
-            background-color: #3a3a3a;
-            transform: scale(1.05);
-        }
-        .calc-btn.number {
-            background-color: #1a1a1a;
-        }
-        .calc-btn.number:hover {
-            background-color: #2a2a2a;
-        }
-        .calc-btn.operator {
-            background-color: #8b4513;
-        }
-        .calc-btn.operator:hover {
-            background-color: #a0522d;
-        }
-        .calc-btn.equals {
-            background-color: #2d5016;
-            grid-column: span 2;
-        }
-        .calc-btn.equals:hover {
-            background-color: #3a6b1d;
-        }
-        .calc-btn.clear {
-            background-color: #8b0000;
-        }
-        .calc-btn.clear:hover {
-            background-color: #b30000;
+        
+        .calendar-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
         }
         
-        /* Edit input styling */
-        .edit-input {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-            border: 1px solid #ff7f50;
-        }
-        
-        @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            .left-panel {
-                position: static;
-            }
-            .summary-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .header-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .logo {
-                width: 60px;
-                height: 60px;
-            }
-        }
-        @media (max-width: 768px) {
-            .summary-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .calendar-content {
+            background-color: var(--container-bg);
+            margin: 5% auto;
+            padding: 20px;
+            border: 2px solid var(--h1-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
         }
     </style>
 </head>
@@ -581,9 +403,7 @@
     <div class="container">
         <div class="header-container">
             <div class="header-controls">
-                <button class="sync-toggle-btn" id="syncToggleBtn" onclick="toggleSyncPanel()" title="Sync across devices">
-                    <i>🔄</i>
-                </button>
+                <button class="sync-toggle-btn" id="syncToggleBtn" onclick="toggleSyncPanel()">🔄</button>
                 <div class="sync-container" id="syncPanel">
                     <input type="text" id="syncCode" class="sync-input" placeholder="SYNC CODE" maxlength="6">
                     <button class="sync-btn" onclick="toggleSync()">Connect</button>
@@ -595,7 +415,6 @@
                     <button class="theme-btn" onclick="setTheme('light')">☀️ Light</button>
                 </div>
             </div>
-            <img src="https://i.imgur.com/NejDizh.png" alt="APPO Logo" class="logo">
             <h1>APPOBEAST CALORIE TRACKER</h1>
             <div class="fire-subtitle">FUEL THE FIRE WITHIN</div>
         </div>
@@ -652,12 +471,15 @@
                     <div class="button-group">
                         <button onclick="addEntry()">Add Entry</button>
                         <button onclick="clearForm()">Clear Form</button>
-                        <button class="calc-btn-main" onclick="openCalculator()">Calculator</button>
+                        <button onclick="openCalculator()">Calculator</button>
                     </div>
                 </div>
 
                 <div class="summary">
-                    <h3>💀 APOCALYPSE STATS FOR <span id="summaryDate">TODAY</span> 💀</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>💀 APOCALYPSE STATS FOR <span id="summaryDate">TODAY</span> 💀</h3>
+                        <button class="calendar-btn" onclick="openCalendar()" title="View monthly progress">📅</button>
+                    </div>
                     <div class="summary-grid">
                         <div class="summary-item">
                             <div class="summary-value" id="totalCalories">0</div>
@@ -690,7 +512,7 @@
             <div class="right-panel">
                 <h2>⚔️ TRACKING BATTLEFIELD ⚔️</h2>
                 <div class="button-group">
-                    <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+                    <button onclick="exportToCSV()">Export to CSV</button>
                     <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleFileImport(event)">
                     <button onclick="document.getElementById('csvFileInput').click()">Import CSV</button>
                     <button onclick="clearAllData()">Clear All Data</button>
@@ -699,7 +521,6 @@
                     <table id="dataTable">
                         <thead>
                             <tr>
-                                <th>☰</th>
                                 <th>Date</th>
                                 <th>Meal Type</th>
                                 <th>Food Item</th>
@@ -715,43 +536,6 @@
                         <tbody id="dataBody">
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Calculator Modal -->
-    <div id="calcModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCalculator()">&times;</span>
-            <div class="calculator">
-                <h3>Calculator</h3>
-                <div class="calc-display" id="calcDisplay">0</div>
-                <div class="calc-buttons">
-                    <button class="calc-btn clear" onclick="clearCalc()">C</button>
-                    <button class="calc-btn" onclick="appendToCalc('/')">/</button>
-                    <button class="calc-btn" onclick="appendToCalc('*')">×</button>
-                    <button class="calc-btn" onclick="deleteLastCalc()">←</button>
-                    
-                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
-                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
-                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
-                    
-                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
-                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
-                    
-                    <button class="calc-btn number" onclick="appendToCalc('1')">1</button>
-                    <button class="calc-btn number" onclick="appendToCalc('2')">2</button>
-                    <button class="calc-btn number" onclick="appendToCalc('3')">3</button>
-                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
-                    
-                    <button class="calc-btn number" onclick="appendToCalc('0')">0</button>
-                    <button class="calc-btn" onclick="appendToCalc('(')">(</button>
-                    <button class="calc-btn" onclick="appendToCalc(')')">)</button>
-                    <button class="calc-btn equals" onclick="calculateResult()">=</button>
                 </div>
             </div>
         </div>
@@ -831,202 +615,23 @@
             const tbody = document.getElementById('dataBody');
             tbody.innerHTML = '';
             
-            // Sort by date (newest first) and then by ID to maintain order
-            const sortedData = [...calorieData].sort((a, b) => {
-                const dateCompare = new Date(b.date) - new Date(a.date);
-                if (dateCompare === 0) {
-                    return a.order - b.order || a.id - b.id;
-                }
-                return dateCompare;
-            });
+            const sortedData = [...calorieData].sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            sortedData.forEach((entry, index) => {
+            sortedData.forEach(entry => {
                 const row = tbody.insertRow();
-                row.draggable = true;
-                row.dataset.id = entry.id;
-                row.dataset.date = entry.date;
-                
                 row.innerHTML = `
-                    <td class="drag-handle">☰</td>
                     <td>${formatDate(entry.date)}</td>
-                    <td class="editable" data-field="mealType" data-id="${entry.id}">${entry.mealType || 'Not specified'}</td>
-                    <td class="editable" data-field="meal" data-id="${entry.id}">${entry.meal}</td>
-                    <td class="editable" data-field="calories" data-id="${entry.id}">${entry.calories}</td>
-                    <td class="editable" data-field="proteins" data-id="${entry.id}">${entry.proteins.toFixed(1)}</td>
-                    <td class="editable" data-field="fats" data-id="${entry.id}">${entry.fats.toFixed(1)}</td>
-                    <td class="editable" data-field="carbs" data-id="${entry.id}">${entry.carbs.toFixed(1)}</td>
-                    <td class="editable" data-field="fiber" data-id="${entry.id}">${entry.fiber.toFixed(1)}</td>
-                    <td class="editable" data-field="weight" data-id="${entry.id}">${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
+                    <td>${entry.mealType || 'Not specified'}</td>
+                    <td>${entry.meal}</td>
+                    <td>${entry.calories}</td>
+                    <td>${entry.proteins.toFixed(1)}</td>
+                    <td>${entry.fats.toFixed(1)}</td>
+                    <td>${entry.carbs.toFixed(1)}</td>
+                    <td>${entry.fiber.toFixed(1)}</td>
+                    <td>${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
                     <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button></td>
                 `;
-                
-                // Add drag event listeners
-                row.addEventListener('dragstart', handleDragStart);
-                row.addEventListener('dragover', handleDragOver);
-                row.addEventListener('drop', handleDrop);
-                row.addEventListener('dragend', handleDragEnd);
-                row.addEventListener('dragleave', handleDragLeave);
             });
-            
-            // Add click event listeners for editing
-            document.querySelectorAll('.editable').forEach(cell => {
-                cell.addEventListener('click', handleEdit);
-            });
-        }
-        
-        function handleEdit(e) {
-            const cell = e.target;
-            if (cell.classList.contains('editing')) return;
-            
-            const originalValue = cell.textContent;
-            const field = cell.dataset.field;
-            const id = parseInt(cell.dataset.id);
-            
-            let inputType = 'text';
-            if (['calories', 'proteins', 'fats', 'carbs', 'fiber', 'weight'].includes(field)) {
-                inputType = 'number';
-            }
-            
-            let inputHTML = '';
-            if (field === 'mealType') {
-                inputHTML = `
-                    <select class="edit-input" style="width: 100%; padding: 4px;">
-                        <option value="Breakfast" ${originalValue === 'Breakfast' ? 'selected' : ''}>Breakfast</option>
-                        <option value="Morning Snack" ${originalValue === 'Morning Snack' ? 'selected' : ''}>Morning Snack</option>
-                        <option value="Lunch" ${originalValue === 'Lunch' ? 'selected' : ''}>Lunch</option>
-                        <option value="Afternoon Snack" ${originalValue === 'Afternoon Snack' ? 'selected' : ''}>Afternoon Snack</option>
-                        <option value="Dinner" ${originalValue === 'Dinner' ? 'selected' : ''}>Dinner</option>
-                        <option value="Evening Snack" ${originalValue === 'Evening Snack' ? 'selected' : ''}>Evening Snack</option>
-                    </select>
-                `;
-            } else {
-                inputHTML = `<input type="${inputType}" class="edit-input" value="${originalValue === '-' ? '' : originalValue}" style="width: 100%; padding: 4px;" ${inputType === 'number' ? 'step="0.1"' : ''}>`;
-            }
-            
-            cell.classList.add('editing');
-            cell.innerHTML = inputHTML;
-            const input = cell.querySelector('.edit-input');
-            input.focus();
-            
-            if (inputType === 'text') {
-                input.select();
-            }
-            
-            const saveEdit = () => {
-                let newValue = input.value;
-                
-                if (inputType === 'number') {
-                    newValue = parseFloat(newValue) || 0;
-                }
-                
-                // Update the data
-                const entry = calorieData.find(e => e.id === id);
-                if (entry) {
-                    entry[field] = newValue;
-                    updateDisplay();
-                    saveData();
-                }
-            };
-            
-            input.addEventListener('blur', saveEdit);
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    input.blur();
-                }
-            });
-        }
-        
-        let draggedElement = null;
-        
-        function handleDragStart(e) {
-            draggedElement = e.target;
-            e.target.classList.add('dragging');
-        }
-        
-        function handleDragOver(e) {
-            e.preventDefault();
-            const afterElement = getDragAfterElement(e.currentTarget.parentElement, e.clientY);
-            const dragging = document.querySelector('.dragging');
-            
-            if (afterElement == null) {
-                e.currentTarget.parentElement.appendChild(dragging);
-            } else {
-                e.currentTarget.parentElement.insertBefore(dragging, afterElement);
-            }
-            
-            // Add visual feedback
-            e.currentTarget.classList.add('drag-over');
-        }
-        
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
-        
-        function handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
-            
-            if (draggedElement) {
-                const draggedId = parseInt(draggedElement.dataset.id);
-                const draggedDate = draggedElement.dataset.date;
-                const targetDate = e.currentTarget.dataset.date;
-                
-                // Only allow reordering within the same date
-                if (draggedDate === targetDate) {
-                    updateOrder();
-                }
-            }
-        }
-        
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-            document.querySelectorAll('.drag-over').forEach(el => {
-                el.classList.remove('drag-over');
-            });
-        }
-        
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('tr:not(.dragging)')];
-            
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-        
-        function updateOrder() {
-            const rows = document.querySelectorAll('#dataBody tr');
-            const dateGroups = {};
-            
-            // Group rows by date and assign order
-            rows.forEach((row, index) => {
-                const id = parseInt(row.dataset.id);
-                const date = row.dataset.date;
-                
-                if (!dateGroups[date]) {
-                    dateGroups[date] = [];
-                }
-                dateGroups[date].push({ id, order: dateGroups[date].length });
-            });
-            
-            // Update the order in calorieData
-            Object.entries(dateGroups).forEach(([date, items]) => {
-                items.forEach(item => {
-                    const entry = calorieData.find(e => e.id === item.id);
-                    if (entry) {
-                        entry.order = item.order;
-                    }
-                });
-            });
-            
-            saveData();
         }
         
         function updateSummary() {
@@ -1034,7 +639,6 @@
             const selectedDateObj = new Date(selectedDate);
             const today = new Date().toISOString().split('T')[0];
             
-            // Update summary title
             const summaryDateElement = document.getElementById('summaryDate');
             if (selectedDate === today) {
                 summaryDateElement.textContent = 'TODAY';
@@ -1046,7 +650,6 @@
                 }).toUpperCase();
             }
             
-            // Filter entries for selected date
             const dateEntries = calorieData.filter(entry => entry.date === selectedDate);
             
             const totals = dateEntries.reduce((sum, entry) => ({
@@ -1063,7 +666,6 @@
             document.getElementById('totalCarbs').textContent = totals.carbs.toFixed(1) + 'g';
             document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1) + 'g';
             
-            // Get weight entry for selected date or closest previous date
             const weightsOnOrBefore = calorieData
                 .filter(entry => entry.weight > 0 && entry.date <= selectedDate)
                 .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -1228,80 +830,28 @@
             }
         }
         
-        // Calculator functions
-        let calcDisplay = '0';
-        let calcResult = false;
+        function toggleSyncPanel() {
+            const syncPanel = document.getElementById('syncPanel');
+            syncPanel.classList.toggle('show');
+        }
+        
+        function toggleSync() {
+            // Sync functionality placeholder
+            alert('Sync feature coming soon!');
+        }
         
         function openCalculator() {
-            document.getElementById('calcModal').style.display = 'block';
+            alert('Calculator feature coming soon!');
         }
         
-        function closeCalculator() {
-            document.getElementById('calcModal').style.display = 'none';
+        function openCalendar() {
+            alert('Calendar feature coming soon!');
         }
         
-        function updateCalcDisplay() {
-            document.getElementById('calcDisplay').textContent = calcDisplay;
-        }
-        
-        function clearCalc() {
-            calcDisplay = '0';
-            calcResult = false;
-            updateCalcDisplay();
-        }
-        
-        function appendToCalc(value) {
-            if (calcResult && !isNaN(value)) {
-                calcDisplay = value;
-                calcResult = false;
-            } else if (calcDisplay === '0' && value !== '.') {
-                calcDisplay = value;
-            } else {
-                calcDisplay += value;
-            }
-            updateCalcDisplay();
-        }
-        
-        function deleteLastCalc() {
-            if (calcDisplay.length > 1) {
-                calcDisplay = calcDisplay.slice(0, -1);
-            } else {
-                calcDisplay = '0';
-            }
-            calcResult = false;
-            updateCalcDisplay();
-        }
-        
-        function calculateResult() {
-            try {
-                const result = eval(calcDisplay);
-                calcDisplay = result.toString();
-                calcResult = true;
-                updateCalcDisplay();
-            } catch (e) {
-                calcDisplay = 'Error';
-                updateCalcDisplay();
-                setTimeout(() => {
-                    calcDisplay = '0';
-                    updateCalcDisplay();
-                }, 1500);
-            }
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('calcModal')) {
-                closeCalculator();
-            }
-        }
-        
-        // Theme switching functionality
         function setTheme(theme) {
-            // Update active button
             document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Apply theme
             if (theme === 'light') {
                 document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #f5f5f5 100%)');
                 document.documentElement.style.setProperty('--container-bg', '#ffffff');
@@ -1346,7 +896,8 @@
                 document.documentElement.style.setProperty('--subtitle-color', '#ff9966');
                 document.documentElement.style.setProperty('--primary-btn', '#ff6347');
                 document.documentElement.style.setProperty('--primary-btn-hover', '#ff7f50');
-            } else { // dark theme (default)
+            } else {
+                // Dark theme (default)
                 document.documentElement.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%)');
                 document.documentElement.style.setProperty('--container-bg', '#0a0a0a');
                 document.documentElement.style.setProperty('--container-border', '#2a2a2a');
@@ -1370,281 +921,14 @@
                 document.documentElement.style.setProperty('--primary-btn-hover', '#ff6b35');
             }
             
-            // Save theme preference
             localStorage.setItem('appobeastTheme', theme);
-            
-            // Update CSS
-            updateThemeStyles();
         }
-        
-        function updateThemeStyles() {
-            const style = document.createElement('style');
-            style.innerHTML = `
-                body { background: var(--bg-gradient); }
-                .container { background-color: var(--container-bg); border: 1px solid var(--container-border); }
-                .input-section, .summary { background-color: var(--section-bg); border: 1px solid var(--section-border); }
-                input, select { background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); }
-                label { color: var(--label-color); }
-                th { background-color: var(--th-bg); color: var(--th-color); }
-                td { color: var(--text-primary); }
-                tr:nth-child(even) { background-color: var(--row-even); }
-                tr:nth-child(odd) { background-color: var(--row-odd); }
-                tr:hover { background-color: var(--row-hover); }
-                .summary { background-color: var(--summary-bg); }
-                .summary-value { color: var(--summary-value); }
-                .summary-label { color: var(--text-secondary); }
-                h1 { color: var(--h1-color); }
-                .fire-subtitle { color: var(--subtitle-color); }
-                h2, h3 { color: var(--subtitle-color); }
-                button { background-color: var(--primary-btn); }
-                button:hover { background-color: var(--primary-btn-hover); }
-                .modal-content { background-color: var(--section-bg); }
-                .calculator { background-color: var(--container-bg); }
-                .calc-display { background-color: var(--input-bg); color: var(--subtitle-color); }
-                .table-container { background-color: var(--input-bg); }
-                th, td { border: 1px solid var(--section-border); }
-                .editable.editing { background-color: var(--section-bg); }
-                .edit-input { background-color: var(--input-bg); color: var(--text-primary); }
-            `;
-            document.head.appendChild(style);
-        }
-        
-        // Load saved theme on page load
-        function loadSavedTheme() {
-            const savedTheme = localStorage.getItem('appobeastTheme') || 'dark';
-            const themeButtons = document.querySelectorAll('.theme-btn');
-            themeButtons.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.toLowerCase().includes(savedTheme)) {
-                    btn.classList.add('active');
-                }
-            });
-            setTheme(savedTheme);
-        }
-        
-        // Initialize theme on load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateThemeStyles();
-            loadSavedTheme();
-        });
-        
-        // Toggle sync panel visibility
-        function toggleSyncPanel() {
-            const syncPanel = document.getElementById('syncPanel');
-            const syncToggleBtn = document.getElementById('syncToggleBtn');
-            
-            if (syncPanel.classList.contains('show')) {
-                syncPanel.classList.remove('show');
-            } else {
-                syncPanel.classList.add('show');
-            }
-        }
-        
-        // Click outside to close sync panel
-        document.addEventListener('click', function(event) {
-            const syncPanel = document.getElementById('syncPanel');
-            const syncToggleBtn = document.getElementById('syncToggleBtn');
-            
-            if (!syncPanel.contains(event.target) && !syncToggleBtn.contains(event.target)) {
-                syncPanel.classList.remove('show');
-            }
-        });
-        
-        // Sync functionality
-        let syncCode = null;
-        let syncInterval = null;
-        
-        // Using JSONBin.io for free cloud storage
-        const JSONBIN_API_KEY = '$2a$10$CgdL8Bv1N2hdlGMx3P9VKej8N6Z3XGmVpCKhZwQgR0P9hKxe6TDTC'; // Read-only public key
-        const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3/b/';
-        const JSONBIN_COLLECTION_ID = '6776fe2ce41b4d34e466e7a0'; // Public collection for APPOBEAST
-        
-        // Generate random 6-character hex code
-        function generateSyncCode() {
-            return Math.random().toString(16).substr(2, 6).toUpperCase();
-        }
-        
-        // Initialize sync from saved code
-        function initializeSync() {
-            const savedCode = localStorage.getItem('appobeastSyncCode');
-            if (savedCode) {
-                document.getElementById('syncCode').value = savedCode;
-                connectToSync(savedCode);
-            }
-        }
-        
-        // Create a simple hash from sync code to use as bin name
-        function hashCode(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            return 'APPO_' + Math.abs(hash).toString(16);
-        }
-        
-        // Toggle sync connection
-        async function toggleSync() {
-            const syncBtn = document.querySelector('.sync-btn');
-            const syncInput = document.getElementById('syncCode');
-            const syncStatus = document.getElementById('syncStatus');
-            
-            if (syncCode) {
-                // Disconnect
-                if (syncInterval) clearInterval(syncInterval);
-                syncCode = null;
-                syncBtn.textContent = 'Connect';
-                syncStatus.textContent = 'Offline';
-                syncStatus.classList.remove('connected');
-                syncInput.disabled = false;
-                localStorage.removeItem('appobeastSyncCode');
-                
-                // Update toggle button
-                document.getElementById('syncToggleBtn').classList.remove('connected');
-                document.getElementById('syncToggleBtn').innerHTML = '<i>🔄</i>';
-            } else {
-                // Connect
-                let code = syncInput.value.trim().toUpperCase();
-                
-                if (!code) {
-                    // Generate new code
-                    code = generateSyncCode();
-                    syncInput.value = code;
-                    alert(`Your sync code is: ${code}\n\nSave this code to access your data on other devices!`);
-                }
-                
-                if (code.length !== 6) {
-                    alert('Sync code must be exactly 6 characters');
-                    return;
-                }
-                
-                connectToSync(code);
-            }
-        }
-        
-        // Connect to sync with code
-        async function connectToSync(code) {
-            const syncBtn = document.querySelector('.sync-btn');
-            const syncInput = document.getElementById('syncCode');
-            const syncStatus = document.getElementById('syncStatus');
-            
-            syncCode = code;
-            localStorage.setItem('appobeastSyncCode', code);
-            
-            // First, try to load existing data
-            const loaded = await loadFromCloud();
-            
-            if (!loaded) {
-                // If no existing data, create new bin
-                await createCloudStorage();
-            }
-            
-            // Set up auto-sync
-            if (syncInterval) clearInterval(syncInterval);
-            syncInterval = setInterval(syncToCloud, 10000); // Sync every 10 seconds
-            
-            syncBtn.textContent = 'Disconnect';
-            syncStatus.textContent = 'Connected';
-            syncStatus.classList.add('connected');
-            syncInput.disabled = true;
-            
-            // Update toggle button
-            document.getElementById('syncToggleBtn').classList.add('connected');
-            document.getElementById('syncToggleBtn').innerHTML = '<i>✅</i>';
-        }
-        
-        // Create new cloud storage bin
-        async function createCloudStorage() {
-            if (!syncCode) return;
-            
-            try {
-                // For demo purposes, we'll use localStorage with the sync code
-                // In a real app, you'd use a proper backend
-                const storageKey = 'appobeast_cloud_' + syncCode;
-                const cloudData = {
-                    data: calorieData,
-                    lastUpdated: new Date().toISOString()
-                };
-                
-                // Simulate cloud storage using localStorage
-                localStorage.setItem(storageKey, JSON.stringify(cloudData));
-                
-                return true;
-            } catch (error) {
-                console.error('Create storage error:', error);
-                return false;
-            }
-        }
-        
-        // Save data to cloud
-        async function syncToCloud() {
-            if (!syncCode) return;
-            
-            try {
-                const storageKey = 'appobeast_cloud_' + syncCode;
-                const cloudData = {
-                    data: calorieData,
-                    lastUpdated: new Date().toISOString()
-                };
-                
-                // Simulate cloud storage using localStorage
-                localStorage.setItem(storageKey, JSON.stringify(cloudData));
-                
-                // Update sync status to show last sync
-                const syncStatus = document.getElementById('syncStatus');
-                if (syncStatus.classList.contains('connected')) {
-                    const now = new Date().toLocaleTimeString();
-                    syncStatus.textContent = `Synced ${now}`;
-                }
-                
-            } catch (error) {
-                console.error('Sync error:', error);
-            }
-        }
-        
-        // Load data from cloud
-        async function loadFromCloud() {
-            if (!syncCode) return false;
-            
-            try {
-                const storageKey = 'appobeast_cloud_' + syncCode;
-                const stored = localStorage.getItem(storageKey);
-                
-                if (stored) {
-                    const cloudData = JSON.parse(stored);
-                    if (cloudData && cloudData.data) {
-                        calorieData = cloudData.data;
-                        updateDisplay();
-                        return true;
-                    }
-                }
-                
-                return false;
-            } catch (error) {
-                console.error('Load error:', error);
-                return false;
-            }
-        }
-        
-        // Modified saveData to include cloud sync
-        const originalSaveData = saveData;
-        saveData = function() {
-            originalSaveData();
-            if (syncCode) {
-                syncToCloud();
-            }
-        };
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Apply dark theme immediately
             setTheme('dark');
-            initializeSync();
+            loadData();
         });
-        
-        // Load data on page load
-        loadData();
     </script>
 </body>
 </html>
