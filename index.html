@@ -775,10 +775,660 @@
                     <button class="calc-btn" onclick="appendToCalc('*')">×</button>
                     <button class="calc-btn" onclick="deleteLastCalc()">←</button>
                     
-                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn number" onclick="appendToCalc('1')">1</button>
+                    <button class="calc-btn number" onclick="appendToCalc('2')">2</button>
+                    <button class="calc-btn number" onclick="appendToCalc('3')">3</button>
+                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('0')">0</button>
+                    <button class="calc-btn" onclick="appendToCalc('(')">(</button>
+                    <button class="calc-btn" onclick="appendToCalc(')')">)</button>
+                    <button class="calc-btn equals" onclick="calculateResult()">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="calendar-modal">
+        <div class="calendar-content">
+            <div class="calendar-header">
+                <button onclick="changeMonth(-1)" style="background: none; border: none; color: #ff7f50; font-size: 24px; cursor: pointer;">◀</button>
+                <h2 id="calendarMonthYear" style="margin: 0; color: #ff9966;">December 2024</h2>
+                <button onclick="changeMonth(1)" style="background: none; border: none; color: #ff7f50; font-size: 24px; cursor: pointer;">▶</button>
+                <span class="close" onclick="closeCalendar()" style="position: absolute; right: 20px; top: 20px; color: #ff7f50; font-size: 28px; cursor: pointer;">&times;</span>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span>🔥</span> Exceeded Goals
+                </div>
+                <div class="legend-item">
+                    <span>✅</span> Met Goals
+                </div>
+                <div class="legend-item">
+                    <span>⚠️</span> Below Goals
+                </div>
+                <div class="legend-item">
+                    <span>💀</span> No Data
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data array
+        let calorieData = [];
+        
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Watch for date changes
+        document.getElementById('date').addEventListener('change', function() {
+            updateSummary();
+        });
+        
+        function addEntry() {
+            const date = document.getElementById('date').value;
+            const mealType = document.getElementById('mealType').value;
+            const meal = document.getElementById('meal').value;
+            const calories = parseFloat(document.getElementById('calories').value) || 0;
+            const proteins = parseFloat(document.getElementById('proteins').value) || 0;
+            const fats = parseFloat(document.getElementById('fats').value) || 0;
+            const carbs = parseFloat(document.getElementById('carbs').value) || 0;
+            const fiber = parseFloat(document.getElementById('fiber').value) || 0;
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            
+            if (!date || !meal) {
+                alert('Please enter at least a date and food item description');
+                return;
+            }
+            
+            const entry = {
+                id: Date.now(),
+                date,
+                mealType,
+                meal,
+                calories,
+                proteins,
+                fats,
+                carbs,
+                fiber,
+                weight
+            };
+            
+            calorieData.push(entry);
+            clearForm();
+            updateDisplay();
+            saveData();
+        }
+        
+        function clearForm() {
+            document.getElementById('meal').value = '';
+            document.getElementById('calories').value = '';
+            document.getElementById('proteins').value = '';
+            document.getElementById('fats').value = '';
+            document.getElementById('carbs').value = '';
+            document.getElementById('fiber').value = '';
+            document.getElementById('weight').value = '';
+        }
+        
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                calorieData = calorieData.filter(entry => entry.id !== id);
+                updateDisplay();
+                saveData();
+            }
+        }
+        
+        function updateDisplay() {
+            updateTable();
+            updateSummary();
+        }
+        
+        function updateTable() {
+            const tbody = document.getElementById('dataBody');
+            tbody.innerHTML = '';
+            
+            const sortedData = [...calorieData].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedData.forEach(entry => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${formatDate(entry.date)}</td>
+                    <td>${entry.mealType || 'Not specified'}</td>
+                    <td>${entry.meal}</td>
+                    <td>${entry.calories}</td>
+                    <td>${entry.proteins.toFixed(1)}</td>
+                    <td>${entry.fats.toFixed(1)}</td>
+                    <td>${entry.carbs.toFixed(1)}</td>
+                    <td>${entry.fiber.toFixed(1)}</td>
+                    <td>${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button></td>
+                `;
+            });
+        }
+        
+        function updateSummary() {
+            const selectedDate = document.getElementById('date').value;
+            const selectedDateObj = new Date(selectedDate);
+            const today = new Date().toISOString().split('T')[0];
+            
+            const summaryDateElement = document.getElementById('summaryDate');
+            if (selectedDate === today) {
+                summaryDateElement.textContent = 'TODAY';
+            } else {
+                summaryDateElement.textContent = selectedDateObj.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                }).toUpperCase();
+            }
+            
+            const dateEntries = calorieData.filter(entry => entry.date === selectedDate);
+            
+            const totals = dateEntries.reduce((sum, entry) => ({
+                calories: sum.calories + entry.calories,
+                proteins: sum.proteins + entry.proteins,
+                fats: sum.fats + entry.fats,
+                carbs: sum.carbs + entry.carbs,
+                fiber: sum.fiber + entry.fiber
+            }), { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 });
+            
+            document.getElementById('totalCalories').textContent = Math.round(totals.calories);
+            document.getElementById('totalProteins').textContent = totals.proteins.toFixed(1) + 'g';
+            document.getElementById('totalFats').textContent = totals.fats.toFixed(1) + 'g';
+            document.getElementById('totalCarbs').textContent = totals.carbs.toFixed(1) + 'g';
+            document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1) + 'g';
+            
+            const weightsOnOrBefore = calorieData
+                .filter(entry => entry.weight > 0 && entry.date <= selectedDate)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (weightsOnOrBefore.length > 0) {
+                document.getElementById('latestWeight').textContent = weightsOnOrBefore[0].weight.toFixed(1);
+            } else {
+                document.getElementById('latestWeight').textContent = '-';
+            }
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        
+        function exportToCSV() {
+            if (calorieData.length === 0) {
+                alert('No data to export. Please add at least one entry before exporting.');
+                return;
+            }
+            
+            const headers = ['Date', 'Meal Type', 'Food Item', 'Calories', 'Proteins (g)', 'Fats (g)', 'Carbs (g)', 'Fiber (g)', 'Weight (kg)'];
+            const csvContent = [
+                headers.join(','),
+                ...calorieData.map(entry => [
+                    entry.date,
+                    entry.mealType || 'Not specified',
+                    `"${entry.meal}"`,
+                    entry.calories,
+                    entry.proteins.toFixed(1),
+                    entry.fats.toFixed(1),
+                    entry.carbs.toFixed(1),
+                    entry.fiber.toFixed(1),
+                    entry.weight > 0 ? entry.weight.toFixed(1) : ''
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `calorie_tracking_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                calorieData = [];
+                updateDisplay();
+                try {
+                    localStorage.removeItem('calorieTrackerData');
+                } catch (e) {
+                    console.log('Could not clear localStorage');
+                }
+            }
+        }
+        
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    const lines = content.split('\n');
+                    
+                    if (lines.length <= 1) {
+                        alert('CSV file appears to be empty');
+                        return;
+                    }
+                    
+                    if (calorieData.length > 0) {
+                        if (!confirm('This will replace all existing data. Continue?')) {
+                            return;
+                        }
+                    }
+                    
+                    calorieData = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const values = parseCSVLine(line);
+                        
+                        if (values.length >= 8) {
+                            const entry = {
+                                id: Date.now() + i,
+                                date: values[0],
+                                mealType: values[1] === 'Not specified' ? '' : values[1],
+                                meal: values[2],
+                                calories: parseFloat(values[3]) || 0,
+                                proteins: parseFloat(values[4]) || 0,
+                                fats: parseFloat(values[5]) || 0,
+                                carbs: parseFloat(values[6]) || 0,
+                                fiber: parseFloat(values[7]) || 0,
+                                weight: values[8] ? parseFloat(values[8]) || 0 : 0
+                            };
+                            
+                            calorieData.push(entry);
+                        }
+                    }
+                    
+                    updateDisplay();
+                    saveData();
+                    alert(`Successfully imported ${calorieData.length} entries`);
+                    
+                } catch (error) {
+                    alert('Error importing CSV file. Please check the file format.');
+                    console.error(error);
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        function parseCSVLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            values.push(current.trim());
+            return values;
+        }
+        
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('calorieTrackerData');
+                if (savedData) {
+                    calorieData = JSON.parse(savedData);
+                }
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+            updateDisplay();
+        }
+        
+        function saveData() {
+            try {
+                localStorage.setItem('calorieTrackerData', JSON.stringify(calorieData));
+            } catch (e) {
+                console.log('Could not save to localStorage');
+            }
+        }
+        
+        // Calculator functions
+        let calcDisplay = '0';
+        let calcResult = false;
+        
+        function openCalculator() {
+            document.getElementById('calcModal').style.display = 'block';
+        }
+        
+        function closeCalculator() {
+            document.getElementById('calcModal').style.display = 'none';
+        }
+        
+        function updateCalcDisplay() {
+            document.getElementById('calcDisplay').textContent = calcDisplay;
+        }
+        
+        function clearCalc() {
+            calcDisplay = '0';
+            calcResult = false;
+            updateCalcDisplay();
+        }
+        
+        function appendToCalc(value) {
+            if (calcResult && !isNaN(value)) {
+                calcDisplay = value;
+                calcResult = false;
+            } else if (calcDisplay === '0' && value !== '.') {
+                calcDisplay = value;
+            } else {
+                calcDisplay += value;
+            }
+            updateCalcDisplay();
+        }
+        
+        function deleteLastCalc() {
+            if (calcDisplay.length > 1) {
+                calcDisplay = calcDisplay.slice(0, -1);
+            } else {
+                calcDisplay = '0';
+            }
+            calcResult = false;
+            updateCalcDisplay();
+        }
+        
+        function calculateResult() {
+            try {
+                const result = eval(calcDisplay);
+                calcDisplay = result.toString();
+                calcResult = true;
+                updateCalcDisplay();
+            } catch (e) {
+                calcDisplay = 'Error';
+                updateCalcDisplay();
+                setTimeout(() => {
+                    calcDisplay = '0';
+                    updateCalcDisplay();
+                }, 1500);
+            }
+        }
+        
+        // Calendar functionality
+        let currentCalendarDate = new Date();
+        let dailyGoals = {
+            calories: 2000,
+            proteins: 150,
+            carbs: 250,
+            fats: 65
+        };
+        
+        function openCalendar() {
+            document.getElementById('calendarModal').style.display = 'block';
+            const selectedDate = document.getElementById('date').value;
+            if (selectedDate) {
+                currentCalendarDate = new Date(selectedDate);
+            }
+            generateCalendar();
+        }
+        
+        function closeCalendar() {
+            document.getElementById('calendarModal').style.display = 'none';
+        }
+        
+        function changeMonth(direction) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            generateCalendar();
+        }
+        
+        function generateCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            document.getElementById('calendarMonthYear').textContent = 
+                currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                grid.appendChild(emptyDay);
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = day;
+                
+                const dayStatus = document.createElement('div');
+                dayStatus.className = 'calendar-day-status';
+                
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayData = getDayStatus(dateStr);
+                dayStatus.textContent = dayData.icon;
+                dayElement.title = dayData.tooltip;
+                
+                dayElement.appendChild(dayNumber);
+                dayElement.appendChild(dayStatus);
+                
+                dayElement.onclick = () => {
+                    document.getElementById('date').value = dateStr;
+                    updateSummary();
+                    closeCalendar();
+                };
+                
+                grid.appendChild(dayElement);
+            }
+        }
+        
+        function getDayStatus(dateStr) {
+            const dayEntries = calorieData.filter(entry => entry.date === dateStr);
+            
+            if (dayEntries.length === 0) {
+                return { icon: '💀', tooltip: 'No data for this day' };
+            }
+            
+            const totals = dayEntries.reduce((sum, entry) => ({
+                calories: sum.calories + entry.calories,
+                proteins: sum.proteins + entry.proteins,
+                fats: sum.fats + entry.fats,
+                carbs: sum.carbs + entry.carbs
+            }), { calories: 0, proteins: 0, fats: 0, carbs: 0 });
+            
+            const calorieRatio = totals.calories / dailyGoals.calories;
+            const proteinRatio = totals.proteins / dailyGoals.proteins;
+            
+            if (calorieRatio > 1.1 || proteinRatio > 1.1) {
+                return { 
+                    icon: '🔥', 
+                    tooltip: `Exceeded! ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
+                };
+            } else if (calorieRatio >= 0.9 && proteinRatio >= 0.9) {
+                return { 
+                    icon: '✅', 
+                    tooltip: `Goals met! ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
+                };
+            } else {
+                return { 
+                    icon: '⚠️', 
+                    tooltip: `Below goals: ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
+                };
+            }
+        }
+        
+        // Theme switching functionality
+        function setTheme(theme) {
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const root = document.documentElement;
+            
+            // Apply theme
+            if (theme === 'light') {
+                root.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 50%, #f5f5f5 100%)');
+                root.style.setProperty('--container-bg', '#ffffff');
+                root.style.setProperty('--container-border', '#ddd');
+                root.style.setProperty('--section-bg', '#f8f9fa');
+                root.style.setProperty('--section-border', '#e0e0e0');
+                root.style.setProperty('--input-bg', '#ffffff');
+                root.style.setProperty('--input-border', '#ced4da');
+                root.style.setProperty('--text-primary', '#212529');
+                root.style.setProperty('--text-secondary', '#6c757d');
+                root.style.setProperty('--label-color', '#495057');
+                root.style.setProperty('--th-bg', '#343a40');
+                root.style.setProperty('--th-color', '#ffffff');
+                root.style.setProperty('--row-even', '#f8f9fa');
+                root.style.setProperty('--row-odd', '#ffffff');
+                root.style.setProperty('--row-hover', '#e9ecef');
+                root.style.setProperty('--summary-bg', '#e3f2fd');
+                root.style.setProperty('--summary-value', '#1976d2');
+                root.style.setProperty('--h1-color', '#ff6347');
+                root.style.setProperty('--subtitle-color', '#ff7f50');
+                root.style.setProperty('--primary-btn', '#ff6347');
+                root.style.setProperty('--primary-btn-hover', '#ff7f50');
+            } else if (theme === 'medium') {
+                root.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 50%, #2d2d2d 100%)');
+                root.style.setProperty('--container-bg', '#383838');
+                root.style.setProperty('--container-border', '#4a4a4a');
+                root.style.setProperty('--section-bg', '#424242');
+                root.style.setProperty('--section-border', '#525252');
+                root.style.setProperty('--input-bg', '#2d2d2d');
+                root.style.setProperty('--input-border', '#555555');
+                root.style.setProperty('--text-primary', '#e0e0e0');
+                root.style.setProperty('--text-secondary', '#b0b0b0');
+                root.style.setProperty('--label-color', '#ffb399');
+                root.style.setProperty('--th-bg', '#4a4a4a');
+                root.style.setProperty('--th-color', '#ffb399');
+                root.style.setProperty('--row-even', '#3d3d3d');
+                root.style.setProperty('--row-odd', '#383838');
+                root.style.setProperty('--row-hover', '#4a4a4a');
+                root.style.setProperty('--summary-bg', '#4a4a4a');
+                root.style.setProperty('--summary-value', '#ff9966');
+                root.style.setProperty('--h1-color', '#ff7f50');
+                root.style.setProperty('--subtitle-color', '#ff9966');
+                root.style.setProperty('--primary-btn', '#ff6347');
+                root.style.setProperty('--primary-btn-hover', '#ff7f50');
+            } else { // dark theme (default)
+                root.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%)');
+                root.style.setProperty('--container-bg', '#0a0a0a');
+                root.style.setProperty('--container-border', '#2a2a2a');
+                root.style.setProperty('--section-bg', '#1a1a1a');
+                root.style.setProperty('--section-border', '#2a2a2a');
+                root.style.setProperty('--input-bg', '#0a0a0a');
+                root.style.setProperty('--input-border', '#3a3a3a');
+                root.style.setProperty('--text-primary', '#ffffff');
+                root.style.setProperty('--text-secondary', '#999999');
+                root.style.setProperty('--label-color', '#ff8c42');
+                root.style.setProperty('--th-bg', '#1a0000');
+                root.style.setProperty('--th-color', '#ff8c42');
+                root.style.setProperty('--row-even', '#0f0f0f');
+                root.style.setProperty('--row-odd', '#0a0a0a');
+                root.style.setProperty('--row-hover', '#1a1a1a');
+                root.style.setProperty('--summary-bg', '#1a0000');
+                root.style.setProperty('--summary-value', '#ff6b35');
+                root.style.setProperty('--h1-color', '#ff4500');
+                root.style.setProperty('--subtitle-color', '#ff8c42');
+                root.style.setProperty('--primary-btn', '#ff4500');
+                root.style.setProperty('--primary-btn-hover', '#ff6b35');
+            }
+            
+            // Save theme preference
+            localStorage.setItem('appobeastTheme', theme);
+        }
+        
+        // Load saved theme on page load
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('appobeastTheme') || 'dark';
+            const themeButtons = document.querySelectorAll('.theme-btn');
+            themeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(savedTheme)) {
+                    btn.classList.add('active');
+                }
+            });
+            setTheme(savedTheme);
+        }
+        
+        function toggleSyncPanel() {
+            const syncPanel = document.getElementById('syncPanel');
+            const syncToggleBtn = document.getElementById('syncToggleBtn');
+            
+            if (syncPanel.classList.contains('show')) {
+                syncPanel.classList.remove('show');
+            } else {
+                syncPanel.classList.add('show');
+            }
+        }
+        
+        // Click outside to close sync panel
+        document.addEventListener('click', function(event) {
+            const syncPanel = document.getElementById('syncPanel');
+            const syncToggleBtn = document.getElementById('syncToggleBtn');
+            
+            if (!syncPanel.contains(event.target) && !syncToggleBtn.contains(event.target)) {
+                syncPanel.classList.remove('show');
+            }
+        });
+        
+        // Sync functionality placeholder
+        function toggleSync() {
+            alert('Sync feature coming soon!');
+        }
+        
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('calcModal')) {
+                closeCalculator();
+            }
+            if (event.target == document.getElementById('calendarModal')) {
+                closeCalendar();
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            loadData();
+        });
+    </script>
+</body>
+</html>" onclick="appendToCalc('7')">7</button>
                     <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
                     <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
                     <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
                     
                     <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button
+                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
+                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                    
+                    <button class="calc-btn number
