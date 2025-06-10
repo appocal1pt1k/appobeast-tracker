@@ -4,42 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APPOBEAST Calorie Tracker</title>
-    <style>
-        /* CSS Variables for theming - START WITH READABLE DARK */
+    <style id="themeStyles">
+        /* CSS Variables for theming */
         :root {
-            --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-            --container-bg: #1f1f1f;
-            --container-border: #333333;
-            --section-bg: #2a2a2a;
-            --section-border: #3a3a3a;
-            --input-bg: #1a1a1a;
-            --input-border: #444444;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --label-color: #ffb399;
-            --th-bg: #2d2d2d;
-            --th-color: #ffb399;
-            --row-even: #1f1f1f;
-            --row-odd: #1a1a1a;
-            --row-hover: #2a2a2a;
-            --summary-bg: #2d2d2d;
-            --summary-value: #ff9966;
-            --h1-color: #ff7f50;
-            --subtitle-color: #ff9966;
-            --primary-btn: #ff6347;
-            --primary-btn-hover: #ff7f50;
+            --bg-gradient: linear-gradient(135deg, #1a0000 0%, #2d0000 50%, #000000 100%);
+            --container-bg: #0a0a0a;
+            --container-border: #2a2a2a;
+            --section-bg: #1a1a1a;
+            --section-border: #2a2a2a;
+            --input-bg: #0a0a0a;
+            --input-border: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --label-color: #ff8c42;
+            --th-bg: #1a0000;
+            --th-color: #ff8c42;
+            --row-even: #0f0f0f;
+            --row-odd: #0a0a0a;
+            --row-hover: #1a1a1a;
+            --summary-bg: #1a0000;
+            --summary-value: #ff6b35;
+            --h1-color: #ff4500;
+            --subtitle-color: #ff8c42;
+            --primary-btn: #ff4500;
+            --primary-btn-hover: #ff6b35;
         }
         
+        /* Dark Theme (Default) */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            background: var(--bg-gradient);
             padding: 20px;
             margin: 0;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
         }
-        
         body::before {
             content: '';
             position: fixed;
@@ -48,25 +48,24 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 99, 71, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 140, 0, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: 1;
         }
-        
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background-color: #1f1f1f;
+            background-color: var(--container-bg);
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(255, 69, 0, 0.3), inset 0 0 20px rgba(139, 0, 0, 0.1);
             box-sizing: border-box;
-            border: 1px solid #333333;
+            border: 1px solid var(--container-border);
             position: relative;
             z-index: 2;
         }
-        
         .header-container {
             display: flex;
             align-items: center;
@@ -76,7 +75,6 @@
             flex-direction: column;
             position: relative;
         }
-        
         .header-controls {
             position: absolute;
             top: 0;
@@ -85,7 +83,6 @@
             gap: 10px;
             align-items: center;
         }
-        
         .sync-toggle-btn {
             background-color: #2a2a2a;
             border: 1px solid #3a3a3a;
@@ -96,12 +93,14 @@
             font-size: 18px;
             transition: all 0.3s;
         }
-        
         .sync-toggle-btn:hover {
             background-color: #3a3a3a;
             box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
         }
-        
+        .sync-toggle-btn.connected {
+            color: #5cb85c;
+            border-color: #5cb85c;
+        }
         .sync-container {
             display: none;
             gap: 5px;
@@ -116,11 +115,39 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             z-index: 100;
         }
-        
         .sync-container.show {
             display: flex;
         }
-        
+        .sync-input {
+            background-color: #1a1a1a;
+            border: 1px solid #444444;
+            color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            width: 100px;
+            text-transform: uppercase;
+        }
+        .sync-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #5cb85c;
+            color: white;
+        }
+        .sync-btn:hover {
+            background-color: #6ec06e;
+        }
+        .sync-status {
+            font-size: 12px;
+            color: #999;
+            margin-left: 5px;
+        }
+        .sync-status.connected {
+            color: #5cb85c;
+        }
         .theme-switcher {
             display: flex;
             gap: 5px;
@@ -129,7 +156,6 @@
             border-radius: 20px;
             border: 1px solid #3a3a3a;
         }
-        
         .theme-btn {
             padding: 8px 12px;
             border: none;
@@ -140,92 +166,128 @@
             background-color: transparent;
             color: #999;
         }
-        
         .theme-btn.active {
             background-color: #ff6347;
             color: white;
         }
-        
+        .theme-btn:hover:not(.active) {
+            background-color: #3a3a3a;
+            color: #ff9966;
+        }
         h1 {
-            color: #ff7f50;
+            color: var(--h1-color);
             text-align: center;
             margin: 0;
             font-size: 42px;
-            text-shadow: 0 0 10px rgba(255, 127, 80, 0.3);
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
             font-weight: 900;
             letter-spacing: 3px;
             animation: fireGlow 2s ease-in-out infinite alternate;
         }
-        
         .fire-subtitle {
-            color: #ff9966;
+            color: var(--subtitle-color);
             font-size: 18px;
             letter-spacing: 5px;
             text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(255, 153, 102, 0.3);
+            text-shadow: 0 0 10px rgba(255, 140, 66, 0.6);
             margin-top: -10px;
             animation: pulse 3s ease-in-out infinite;
         }
-        
         @keyframes fireGlow {
-            from { text-shadow: 0 0 10px rgba(255, 127, 80, 0.3); }
-            to { text-shadow: 0 0 15px rgba(255, 127, 80, 0.4); }
+            from {
+                text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 69, 0, 1), 0 0 60px rgba(255, 69, 0, 0.7), 0 0 80px rgba(255, 140, 0, 0.4);
+            }
         }
-        
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
         }
-        
+        h2, h3 {
+            color: #ff6b35;
+        }
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
             gap: 30px;
             align-items: start;
         }
-        
         .left-panel {
             position: sticky;
             top: 20px;
         }
-        
         .input-section {
-            background: var(--section-bg);
-            padding: 20px;
+            background-color: var(--section-bg);
+            padding: 22px;
             border-radius: 8px;
             margin-bottom: 20px;
             position: relative;
-            border: 2px solid transparent;
-            background-image: 
-                linear-gradient(var(--section-bg), var(--section-bg)),
-                linear-gradient(45deg, #ff0000, #ff4500, #ff8c00, #ffd700, #ffff00);
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
+            background-image: linear-gradient(45deg, 
+                #ff0000 0%, 
+                #ff4500 25%, 
+                #ff8c00 50%, 
+                #ffd700 75%, 
+                #ffff00 100%);
+            background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+            background-repeat: no-repeat;
+            box-shadow: 
+                inset 2px 2px 0 0 rgba(255, 0, 0, 0.5),
+                inset -2px -2px 0 0 rgba(255, 255, 0, 0.5),
+                0 0 20px rgba(255, 69, 0, 0.3);
         }
-        
+        .input-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                #ff0000 0%, 
+                #ff4500 25%, 
+                #ff8c00 50%, 
+                #ffd700 75%, 
+                #ffff00 100%);
+            border-radius: 8px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes borderGlow {
+            from {
+                opacity: 0.6;
+            }
+            to {
+                opacity: 1;
+            }
+        }
         .input-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 20px;
         }
-        
         .input-group {
             display: flex;
             flex-direction: column;
         }
-        
         .input-group.full-width {
             grid-column: 1 / -1;
         }
-        
         label {
             font-weight: bold;
             margin-bottom: 5px;
             color: var(--label-color);
             font-size: 14px;
         }
-        
         input[type="number"], input[type="date"], input[type="text"], select {
             padding: 8px;
             border: 1px solid var(--input-border);
@@ -236,9 +298,13 @@
             background-color: var(--input-bg);
             color: var(--text-primary);
         }
-        
+        input[type="number"]:focus, input[type="date"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #ff4500;
+            box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+        }
         button {
-            background-color: #ff6347;
+            background-color: var(--primary-btn);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -246,14 +312,23 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        
         button:hover {
-            background-color: #ff7f50;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(255, 127, 80, 0.3);
+            background-color: var(--primary-btn-hover);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.7), 0 4px 8px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
         }
-        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
         .summary {
             background-color: var(--summary-bg);
             padding: 20px;
@@ -261,29 +336,25 @@
             margin-bottom: 20px;
             border: 1px solid var(--section-border);
         }
-        
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
-        
         .summary-item {
             text-align: center;
         }
-        
         .summary-value {
             font-size: 24px;
             font-weight: bold;
             color: var(--summary-value);
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
         }
-        
         .summary-label {
             color: var(--text-secondary);
             margin-top: 5px;
             font-size: 14px;
         }
-        
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
@@ -291,20 +362,17 @@
             border-radius: 8px;
             padding: 10px;
         }
-        
         table {
             width: 100%;
             border-collapse: collapse;
             min-width: 600px;
         }
-        
         th, td {
             border: 1px solid var(--section-border);
             padding: 10px;
             text-align: left;
             color: var(--text-primary);
         }
-        
         th {
             background-color: var(--th-bg);
             color: var(--th-color);
@@ -312,29 +380,35 @@
             position: sticky;
             top: 0;
         }
-        
         tr:nth-child(even) {
             background-color: var(--row-even);
         }
-        
         tr:nth-child(odd) {
             background-color: var(--row-odd);
         }
-        
         tr:hover {
             background-color: var(--row-hover);
         }
-        
         .delete-btn {
             background-color: #8b0000;
             padding: 6px 12px;
             font-size: 14px;
         }
-        
         .delete-btn:hover {
             background-color: #b30000;
         }
-        
+        .export-btn {
+            background-color: #2d5016;
+        }
+        .export-btn:hover {
+            background-color: #3a6b1d;
+        }
+        .calc-btn-main {
+            background-color: #663399;
+        }
+        .calc-btn-main:hover {
+            background-color: #7d40b8;
+        }
         .calendar-btn {
             background: none;
             border: none;
@@ -344,12 +418,12 @@
             padding: 5px;
             transition: all 0.3s;
         }
-        
         .calendar-btn:hover {
             transform: scale(1.2);
         }
         
-        .modal {
+        /* Modal styles */
+        .modal, .calendar-modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -359,38 +433,18 @@
             height: 100%;
             background-color: rgba(0,0,0,0.8);
         }
-        
         .modal-content {
             background-color: var(--section-bg);
             margin: 15% auto;
             padding: 15px;
-            border: 1px solid var(--h1-color);
+            border: 1px solid #ff4500;
             border-radius: 10px;
             width: 90%;
             max-width: 300px;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
-        
-        .close {
-            color: var(--h1-color);
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .calendar-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-        }
-        
         .calendar-content {
-            background-color: #1f1f1f;
+            background-color: var(--container-bg);
             margin: 5% auto;
             padding: 20px;
             border: 2px solid #ff7f50;
@@ -399,29 +453,36 @@
             max-width: 600px;
             box-shadow: 0 0 20px rgba(255, 127, 80, 0.3);
         }
-        
+        .close {
+            color: #ff4500;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #ff6b35;
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+        }
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-        
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
             margin-top: 10px;
         }
-        
         .calendar-day-header {
             text-align: center;
-            color: #ffb399;
+            color: var(--th-color);
             font-weight: bold;
             padding: 5px;
             font-size: 12px;
         }
-        
         .calendar-day {
             aspect-ratio: 1;
             display: flex;
@@ -429,39 +490,33 @@
             align-items: center;
             justify-content: center;
             border-radius: 4px;
-            background-color: #2a2a2a;
-            border: 1px solid #3a3a3a;
+            background-color: var(--section-bg);
+            border: 1px solid var(--section-border);
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
         }
-        
         .calendar-day:hover {
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(255, 153, 102, 0.5);
         }
-        
         .calendar-day-number {
             font-size: 12px;
-            color: #b0b0b0;
+            color: var(--text-secondary);
         }
-        
         .calendar-day-status {
             font-size: 20px;
             margin-top: 2px;
         }
-        
         .calendar-day.empty {
             background: transparent;
             border: none;
             cursor: default;
         }
-        
         .calendar-day.empty:hover {
             transform: none;
             box-shadow: none;
         }
-        
         .calendar-legend {
             display: flex;
             justify-content: center;
@@ -469,12 +524,97 @@
             margin-top: 20px;
             font-size: 12px;
         }
-        
         .legend-item {
             display: flex;
             align-items: center;
             gap: 5px;
-            color: #b0b0b0;
+            color: var(--text-secondary);
+        }
+        
+        /* Calculator Modal */
+        .calculator {
+            background-color: var(--input-bg);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .calculator h3 {
+            margin-top: 5px;
+        }
+        .calc-display {
+            background-color: #000000;
+            padding: 10px;
+            border: 2px solid #3a3a3a;
+            border-radius: 4px;
+            font-size: 18px;
+            text-align: right;
+            margin-bottom: 10px;
+            min-height: 25px;
+            color: #ff8c42;
+        }
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .calc-btn {
+            padding: 15px;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calc-btn:hover {
+            background-color: #3a3a3a;
+            transform: scale(1.05);
+        }
+        .calc-btn.number {
+            background-color: #1a1a1a;
+        }
+        .calc-btn.number:hover {
+            background-color: #2a2a2a;
+        }
+        .calc-btn.operator {
+            background-color: #8b4513;
+        }
+        .calc-btn.operator:hover {
+            background-color: #a0522d;
+        }
+        .calc-btn.equals {
+            background-color: #2d5016;
+            grid-column: span 2;
+        }
+        .calc-btn.equals:hover {
+            background-color: #3a6b1d;
+        }
+        .calc-btn.clear {
+            background-color: #8b0000;
+        }
+        .calc-btn.clear:hover {
+            background-color: #b30000;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .left-panel {
+                position: static;
+            }
+            .summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -482,7 +622,9 @@
     <div class="container">
         <div class="header-container">
             <div class="header-controls">
-                <button class="sync-toggle-btn" id="syncToggleBtn" onclick="toggleSyncPanel()">🔄</button>
+                <button class="sync-toggle-btn" id="syncToggleBtn" onclick="toggleSyncPanel()" title="Sync across devices">
+                    <i>🔄</i>
+                </button>
                 <div class="sync-container" id="syncPanel">
                     <input type="text" id="syncCode" class="sync-input" placeholder="SYNC CODE" maxlength="6">
                     <button class="sync-btn" onclick="toggleSync()">Connect</button>
@@ -550,7 +692,7 @@
                     <div class="button-group">
                         <button onclick="addEntry()">Add Entry</button>
                         <button onclick="clearForm()">Clear Form</button>
-                        <button onclick="openCalculator()">Calculator</button>
+                        <button class="calc-btn-main" onclick="openCalculator()">Calculator</button>
                     </div>
                 </div>
 
@@ -591,7 +733,7 @@
             <div class="right-panel">
                 <h2>⚔️ TRACKING BATTLEFIELD ⚔️</h2>
                 <div class="button-group">
-                    <button onclick="exportToCSV()">Export to CSV</button>
+                    <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
                     <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleFileImport(event)">
                     <button onclick="document.getElementById('csvFileInput').click()">Import CSV</button>
                     <button onclick="clearAllData()">Clear All Data</button>
@@ -620,466 +762,23 @@
         </div>
     </div>
 
-    <!-- Calendar Modal -->
-    <div id="calendarModal" class="calendar-modal">
-        <div class="calendar-content">
-            <div class="calendar-header">
-                <button onclick="changeMonth(-1)" style="background: none; border: none; color: #ff7f50; font-size: 24px; cursor: pointer;">◀</button>
-                <h2 id="calendarMonthYear" style="margin: 0; color: #ff9966;">December 2024</h2>
-                <button onclick="changeMonth(1)" style="background: none; border: none; color: #ff7f50; font-size: 24px; cursor: pointer;">▶</button>
-                <span class="close" onclick="closeCalendar()" style="position: absolute; right: 20px; top: 20px; color: #ff7f50; font-size: 28px; cursor: pointer;">&times;</span>
-            </div>
-            <div class="calendar-grid" id="calendarGrid">
-                <!-- Calendar will be generated here -->
-            </div>
-            <div class="calendar-legend">
-                <div class="legend-item">
-                    <span>🔥</span> Exceeded Goals
-                </div>
-                <div class="legend-item">
-                    <span>✅</span> Met Goals
-                </div>
-                <div class="legend-item">
-                    <span>⚠️</span> Below Goals
-                </div>
-                <div class="legend-item">
-                    <span>💀</span> No Data
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Initialize data array
-        let calorieData = [];
-        
-        // Set today's date as default
-        document.getElementById('date').valueAsDate = new Date();
-        
-        // Watch for date changes
-        document.getElementById('date').addEventListener('change', function() {
-            updateSummary();
-        });
-        
-        function addEntry() {
-            const date = document.getElementById('date').value;
-            const mealType = document.getElementById('mealType').value;
-            const meal = document.getElementById('meal').value;
-            const calories = parseFloat(document.getElementById('calories').value) || 0;
-            const proteins = parseFloat(document.getElementById('proteins').value) || 0;
-            const fats = parseFloat(document.getElementById('fats').value) || 0;
-            const carbs = parseFloat(document.getElementById('carbs').value) || 0;
-            const fiber = parseFloat(document.getElementById('fiber').value) || 0;
-            const weight = parseFloat(document.getElementById('weight').value) || 0;
-            
-            if (!date || !meal) {
-                alert('Please enter at least a date and food item description');
-                return;
-            }
-            
-            const entry = {
-                id: Date.now(),
-                date,
-                mealType,
-                meal,
-                calories,
-                proteins,
-                fats,
-                carbs,
-                fiber,
-                weight
-            };
-            
-            calorieData.push(entry);
-            clearForm();
-            updateDisplay();
-            saveData();
-        }
-        
-        function clearForm() {
-            document.getElementById('meal').value = '';
-            document.getElementById('calories').value = '';
-            document.getElementById('proteins').value = '';
-            document.getElementById('fats').value = '';
-            document.getElementById('carbs').value = '';
-            document.getElementById('fiber').value = '';
-            document.getElementById('weight').value = '';
-        }
-        
-        function deleteEntry(id) {
-            if (confirm('Are you sure you want to delete this entry?')) {
-                calorieData = calorieData.filter(entry => entry.id !== id);
-                updateDisplay();
-                saveData();
-            }
-        }
-        
-        function updateDisplay() {
-            updateTable();
-            updateSummary();
-        }
-        
-        function updateTable() {
-            const tbody = document.getElementById('dataBody');
-            tbody.innerHTML = '';
-            
-            const sortedData = [...calorieData].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedData.forEach(entry => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${formatDate(entry.date)}</td>
-                    <td>${entry.mealType || 'Not specified'}</td>
-                    <td>${entry.meal}</td>
-                    <td>${entry.calories}</td>
-                    <td>${entry.proteins.toFixed(1)}</td>
-                    <td>${entry.fats.toFixed(1)}</td>
-                    <td>${entry.carbs.toFixed(1)}</td>
-                    <td>${entry.fiber.toFixed(1)}</td>
-                    <td>${entry.weight > 0 ? entry.weight.toFixed(1) : '-'}</td>
-                    <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button></td>
-                `;
-            });
-        }
-        
-        function updateSummary() {
-            const selectedDate = document.getElementById('date').value;
-            const selectedDateObj = new Date(selectedDate);
-            const today = new Date().toISOString().split('T')[0];
-            
-            const summaryDateElement = document.getElementById('summaryDate');
-            if (selectedDate === today) {
-                summaryDateElement.textContent = 'TODAY';
-            } else {
-                summaryDateElement.textContent = selectedDateObj.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                }).toUpperCase();
-            }
-            
-            const dateEntries = calorieData.filter(entry => entry.date === selectedDate);
-            
-            const totals = dateEntries.reduce((sum, entry) => ({
-                calories: sum.calories + entry.calories,
-                proteins: sum.proteins + entry.proteins,
-                fats: sum.fats + entry.fats,
-                carbs: sum.carbs + entry.carbs,
-                fiber: sum.fiber + entry.fiber
-            }), { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 });
-            
-            document.getElementById('totalCalories').textContent = Math.round(totals.calories);
-            document.getElementById('totalProteins').textContent = totals.proteins.toFixed(1) + 'g';
-            document.getElementById('totalFats').textContent = totals.fats.toFixed(1) + 'g';
-            document.getElementById('totalCarbs').textContent = totals.carbs.toFixed(1) + 'g';
-            document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1) + 'g';
-            
-            const weightsOnOrBefore = calorieData
-                .filter(entry => entry.weight > 0 && entry.date <= selectedDate)
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            if (weightsOnOrBefore.length > 0) {
-                document.getElementById('latestWeight').textContent = weightsOnOrBefore[0].weight.toFixed(1);
-            } else {
-                document.getElementById('latestWeight').textContent = '-';
-            }
-        }
-        
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        }
-        
-        function exportToCSV() {
-            if (calorieData.length === 0) {
-                alert('No data to export. Please add at least one entry before exporting.');
-                return;
-            }
-            
-            const headers = ['Date', 'Meal Type', 'Food Item', 'Calories', 'Proteins (g)', 'Fats (g)', 'Carbs (g)', 'Fiber (g)', 'Weight (kg)'];
-            const csvContent = [
-                headers.join(','),
-                ...calorieData.map(entry => [
-                    entry.date,
-                    entry.mealType || 'Not specified',
-                    `"${entry.meal}"`,
-                    entry.calories,
-                    entry.proteins.toFixed(1),
-                    entry.fats.toFixed(1),
-                    entry.carbs.toFixed(1),
-                    entry.fiber.toFixed(1),
-                    entry.weight > 0 ? entry.weight.toFixed(1) : ''
-                ].join(','))
-            ].join('\n');
-            
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', `calorie_tracking_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-        
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-                calorieData = [];
-                updateDisplay();
-                try {
-                    localStorage.removeItem('calorieTrackerData');
-                } catch (e) {
-                    console.log('Could not clear localStorage');
-                }
-            }
-        }
-        
-        function handleFileImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const content = e.target.result;
-                    const lines = content.split('\n');
+    <!-- Calculator Modal -->
+    <div id="calcModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCalculator()">&times;</span>
+            <div class="calculator">
+                <h3>Calculator</h3>
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
+                    <button class="calc-btn clear" onclick="clearCalc()">C</button>
+                    <button class="calc-btn" onclick="appendToCalc('/')">/</button>
+                    <button class="calc-btn" onclick="appendToCalc('*')">×</button>
+                    <button class="calc-btn" onclick="deleteLastCalc()">←</button>
                     
-                    if (lines.length <= 1) {
-                        alert('CSV file appears to be empty');
-                        return;
-                    }
+                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
+                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
                     
-                    if (calorieData.length > 0) {
-                        if (!confirm('This will replace all existing data. Continue?')) {
-                            return;
-                        }
-                    }
-                    
-                    calorieData = [];
-                    
-                    for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        
-                        const values = parseCSVLine(line);
-                        
-                        if (values.length >= 8) {
-                            const entry = {
-                                id: Date.now() + i,
-                                date: values[0],
-                                mealType: values[1] === 'Not specified' ? '' : values[1],
-                                meal: values[2],
-                                calories: parseFloat(values[3]) || 0,
-                                proteins: parseFloat(values[4]) || 0,
-                                fats: parseFloat(values[5]) || 0,
-                                carbs: parseFloat(values[6]) || 0,
-                                fiber: parseFloat(values[7]) || 0,
-                                weight: values[8] ? parseFloat(values[8]) || 0 : 0
-                            };
-                            
-                            calorieData.push(entry);
-                        }
-                    }
-                    
-                    updateDisplay();
-                    saveData();
-                    alert(`Successfully imported ${calorieData.length} entries`);
-                    
-                } catch (error) {
-                    alert('Error importing CSV file. Please check the file format.');
-                    console.error(error);
-                }
-            };
-            
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-        
-        function parseCSVLine(line) {
-            const values = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            values.push(current.trim());
-            return values;
-        }
-        
-        function loadData() {
-            try {
-                const savedData = localStorage.getItem('calorieTrackerData');
-                if (savedData) {
-                    calorieData = JSON.parse(savedData);
-                }
-            } catch (e) {
-                console.log('localStorage not available');
-            }
-            updateDisplay();
-        }
-        
-        function saveData() {
-            try {
-                localStorage.setItem('calorieTrackerData', JSON.stringify(calorieData));
-            } catch (e) {
-                console.log('Could not save to localStorage');
-            }
-        }
-        
-        function toggleSyncPanel() {
-            const syncPanel = document.getElementById('syncPanel');
-            syncPanel.classList.toggle('show');
-        }
-        
-        function toggleSync() {
-            // Sync functionality placeholder
-            alert('Sync feature coming soon!');
-        }
-        
-        function openCalculator() {
-            alert('Calculator feature coming soon!');
-        }
-        
-        // Calendar functionality
-        let currentCalendarDate = new Date();
-        let dailyGoals = {
-            calories: 2000,
-            proteins: 150,
-            carbs: 250,
-            fats: 65
-        };
-        
-        function openCalendar() {
-            document.getElementById('calendarModal').style.display = 'block';
-            const selectedDate = document.getElementById('date').value;
-            if (selectedDate) {
-                currentCalendarDate = new Date(selectedDate);
-            }
-            generateCalendar();
-        }
-        
-        function closeCalendar() {
-            document.getElementById('calendarModal').style.display = 'none';
-        }
-        
-        function changeMonth(direction) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
-            generateCalendar();
-        }
-        
-        function generateCalendar() {
-            const year = currentCalendarDate.getFullYear();
-            const month = currentCalendarDate.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            document.getElementById('calendarMonthYear').textContent = 
-                currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-            
-            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            dayHeaders.forEach(day => {
-                const header = document.createElement('div');
-                header.className = 'calendar-day-header';
-                header.textContent = day;
-                grid.appendChild(header);
-            });
-            
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                grid.appendChild(emptyDay);
-            }
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = day;
-                
-                const dayStatus = document.createElement('div');
-                dayStatus.className = 'calendar-day-status';
-                
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayData = getDayStatus(dateStr);
-                dayStatus.textContent = dayData.icon;
-                dayElement.title = dayData.tooltip;
-                
-                dayElement.appendChild(dayNumber);
-                dayElement.appendChild(dayStatus);
-                
-                dayElement.onclick = () => {
-                    document.getElementById('date').value = dateStr;
-                    updateSummary();
-                    closeCalendar();
-                };
-                
-                grid.appendChild(dayElement);
-            }
-        }
-        
-        function getDayStatus(dateStr) {
-            const dayEntries = calorieData.filter(entry => entry.date === dateStr);
-            
-            if (dayEntries.length === 0) {
-                return { icon: '💀', tooltip: 'No data for this day' };
-            }
-            
-            const totals = dayEntries.reduce((sum, entry) => ({
-                calories: sum.calories + entry.calories,
-                proteins: sum.proteins + entry.proteins,
-                fats: sum.fats + entry.fats,
-                carbs: sum.carbs + entry.carbs
-            }), { calories: 0, proteins: 0, fats: 0, carbs: 0 });
-            
-            const calorieRatio = totals.calories / dailyGoals.calories;
-            const proteinRatio = totals.proteins / dailyGoals.proteins;
-            
-            if (calorieRatio > 1.1 || proteinRatio > 1.1) {
-                return { 
-                    icon: '🔥', 
-                    tooltip: `Exceeded! ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
-                };
-            } else if (calorieRatio >= 0.9 && proteinRatio >= 0.9) {
-                return { 
-                    icon: '✅', 
-                    tooltip: `Goals met! ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
-                };
-            } else {
-                return { 
-                    icon: '⚠️', 
-                    tooltip: `Below goals: ${Math.round(totals.calories)} cal, ${totals.proteins.toFixed(1)}g protein` 
-                };
-            }
-        }
-        
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('calendarModal')) {
-                closeCalendar();
-            }
-        }
-        
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-        });
-    </script>
-</body>
-</html>
+                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
+                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button
