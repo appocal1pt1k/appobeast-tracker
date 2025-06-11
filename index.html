@@ -225,49 +225,17 @@
             top: 20px;
         }
         .input-section {
-            background-color: var(--section-bg);
-            padding: 22px;
+            background: var(--section-bg);
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             position: relative;
-            background-image: linear-gradient(45deg, 
-                #ff0000 0%, 
-                #ff4500 25%, 
-                #ff8c00 50%, 
-                #ffd700 75%, 
-                #ffff00 100%);
-            background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
-            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-            background-repeat: no-repeat;
-            box-shadow: 
-                inset 2px 2px 0 0 rgba(255, 0, 0, 0.5),
-                inset -2px -2px 0 0 rgba(255, 255, 0, 0.5),
-                0 0 20px rgba(255, 69, 0, 0.3);
-        }
-        .input-section::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                #ff0000 0%, 
-                #ff4500 25%, 
-                #ff8c00 50%, 
-                #ffd700 75%, 
-                #ffff00 100%);
-            border-radius: 8px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite alternate;
-        }
-        @keyframes borderGlow {
-            from {
-                opacity: 0.6;
-            }
-            to {
-                opacity: 1;
-            }
+            border: 2px solid transparent;
+            background-image: 
+                linear-gradient(var(--section-bg), var(--section-bg)),
+                linear-gradient(45deg, #ff0000, #ff4500, #ff8c00, #ffd700, #ffff00);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
         }
         .input-grid {
             display: grid;
@@ -775,6 +743,16 @@
                     <button class="calc-btn" onclick="appendToCalc('*')">×</button>
                     <button class="calc-btn" onclick="deleteLastCalc()">←</button>
                     
+                    <button class="calc-btn number" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
+                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                    
+                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
+                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
+                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                    
                     <button class="calc-btn number" onclick="appendToCalc('1')">1</button>
                     <button class="calc-btn number" onclick="appendToCalc('2')">2</button>
                     <button class="calc-btn number" onclick="appendToCalc('3')">3</button>
@@ -1113,10 +1091,70 @@
         
         function openCalculator() {
             document.getElementById('calcModal').style.display = 'block';
+            updateCalcDisplay();
+            
+            // Add keyboard event listener when calculator opens
+            document.addEventListener('keydown', handleCalculatorKeypress);
         }
         
         function closeCalculator() {
             document.getElementById('calcModal').style.display = 'none';
+            
+            // Remove keyboard event listener when calculator closes
+            document.removeEventListener('keydown', handleCalculatorKeypress);
+        }
+        
+        // Handle keyboard input for calculator
+        function handleCalculatorKeypress(event) {
+            const key = event.key;
+            
+            // Prevent default behavior for calculator keys
+            if ('0123456789+-*/.()='.includes(key) || key === 'Enter' || key === 'Backspace' || key === 'Delete' || key === 'Escape') {
+                event.preventDefault();
+            }
+            
+            // Number keys (including numpad)
+            if (/^[0-9]$/.test(key)) {
+                appendToCalc(key);
+            }
+            // Operators
+            else if (key === '+') {
+                appendToCalc('+');
+            }
+            else if (key === '-') {
+                appendToCalc('-');
+            }
+            else if (key === '*') {
+                appendToCalc('*');
+            }
+            else if (key === '/') {
+                appendToCalc('/');
+            }
+            else if (key === '.') {
+                appendToCalc('.');
+            }
+            else if (key === '(') {
+                appendToCalc('(');
+            }
+            else if (key === ')') {
+                appendToCalc(')');
+            }
+            // Calculate result
+            else if (key === 'Enter' || key === '=') {
+                calculateResult();
+            }
+            // Clear
+            else if (key === 'Delete' || key === 'c' || key === 'C') {
+                clearCalc();
+            }
+            // Backspace
+            else if (key === 'Backspace') {
+                deleteLastCalc();
+            }
+            // Close calculator
+            else if (key === 'Escape') {
+                closeCalculator();
+            }
         }
         
         function updateCalcDisplay() {
@@ -1153,7 +1191,15 @@
         
         function calculateResult() {
             try {
-                const result = eval(calcDisplay);
+                // Replace × with * for evaluation
+                const expression = calcDisplay.replace(/×/g, '*');
+                const result = eval(expression);
+                
+                // Check for invalid results
+                if (isNaN(result) || !isFinite(result)) {
+                    throw new Error('Invalid calculation');
+                }
+                
                 calcDisplay = result.toString();
                 calcResult = true;
                 updateCalcDisplay();
@@ -1162,6 +1208,7 @@
                 updateCalcDisplay();
                 setTimeout(() => {
                     calcDisplay = '0';
+                    calcResult = false;
                     updateCalcDisplay();
                 }, 1500);
             }
@@ -1421,14 +1468,4 @@
         });
     </script>
 </body>
-</html>" onclick="appendToCalc('7')">7</button>
-                    <button class="calc-btn number" onclick="appendToCalc('8')">8</button>
-                    <button class="calc-btn number" onclick="appendToCalc('9')">9</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
-                    
-                    <button class="calc-btn number" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn number" onclick="appendToCalc('5')">5</button>
-                    <button class="calc-btn number" onclick="appendToCalc('6')">6</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
-                    
-                    <button class="calc-btn number
+</html>
